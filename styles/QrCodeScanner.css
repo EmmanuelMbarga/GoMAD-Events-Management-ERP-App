@@ -1,0 +1,83 @@
+/* styles/QrCodeScanner.css */  
+
+body {  
+    font-family: 'Arial', sans-serif;  
+  }  
+  
+  h1 {  
+    color: #4c1d95; /* Purple color for the heading */  
+  }  
+  
+  .flex {  
+    display: flex;  
+  }  
+  
+  .flex-col {  
+    flex-direction: column;  
+  }  
+  
+  .items-center {  
+    align-items: center;  
+  }  
+  
+  .justify-center {  
+    justify-content: center;  
+  }  
+  
+  .min-h-screen {  
+    min-height: 100vh;  
+  }  
+  
+  .bg-gray-200 {  
+    background-color: #e2e8f0; /* Light gray background */  
+  }  
+  
+  .border-purple-500 {  
+    border-color: #6b46c1; /* Purple border */  
+  }  
+  
+  .p-8 {  
+    padding: 2rem;  
+  }  
+  
+  .p-4 {  
+    padding: 1rem;  
+  }  
+  
+  .rounded {  
+    border-radius: 0.375rem; /* Rounded corners */  
+  }  
+  
+  .shadow {  
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow effect */  
+  }  
+  
+  .mt-4 {  
+    margin-top: 1rem;  
+  }  
+  
+  .mb-4 {  
+    margin-bottom: 1rem;  
+  }  
+  
+  .bg-white {  
+    background-color: white; /* White background for scanned data */  
+  }  
+  
+  .bg-purple-600 {  
+    background-color: #6b46c1; /* Darker purple for button */  
+  }  
+  
+  .text-white {  
+    color: white; /* White text color */  
+  }  
+  
+  .px-4 {  
+    padding-left: 1rem;  
+    padding-right: 1rem;  
+  }  
+  
+  .py-2 {  
+    padding-top: 0.5rem;  
+    padding-bottom: 0.5rem;  
+  }
