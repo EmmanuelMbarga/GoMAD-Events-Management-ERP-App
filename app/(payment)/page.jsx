@@ -5,6 +5,9 @@ import Image from "next/image";
 import { Dialog } from "@headlessui/react";
 import { motion } from "framer-motion";
 import { Loader2, CheckCircle, AlertCircle } from "lucide-react";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import QRCode from "qrcode";
+import TicketTemplate from "./TicketTemplate";
 
 export default function PaymentPage() {
   const [form, setForm] = useState({ name: "", phone: "", method: "" });
@@ -17,6 +20,7 @@ export default function PaymentPage() {
     message: "",
     ticketUrl: "",
   });
+  const [ticketData, setTicketData] = useState(null);
 
   const validateFormStep = (currentStep) => {
     const newErrors = {};
@@ -50,13 +54,23 @@ export default function PaymentPage() {
     }
   };
 
+  const generateQRCode = async (data) => {
+    try {
+      const qrCodeDataURL = await QRCode.toDataURL(JSON.stringify(data));
+      return qrCodeDataURL;
+    } catch (err) {
+      console.error("QR Code generation error:", err);
+      return null;
+    }
+  };
+
   const handlePayment = async () => {
     if (!validateFormStep(2)) return;
 
     setIsLoading(true);
     try {
       const response = await fetch(
-        "http://localhost:5002/api/register-and-pay",
+        "http://localhost:5003/api/register-and-pay",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -72,10 +86,21 @@ export default function PaymentPage() {
       const data = await response.json();
 
       if (response.ok) {
+        const qrCode = await generateQRCode({
+          name: form.name,
+          phone: form.phone,
+          paymentId: data.paymentId,
+        });
+
+        setTicketData({
+          name: form.name,
+          phone: form.phone,
+          qrCode,
+        });
+
         setDialogData({
           success: true,
           message: "Payment successful! Download your ticket.",
-          ticketUrl: data.ticketPath,
         });
       } else {
         setDialogData({
@@ -96,14 +121,15 @@ export default function PaymentPage() {
     }
   };
 
-  const downloadTicket = () => {
-    if (dialogData.ticketUrl) {
-      window.open(
-        `http://localhost:5002/api/download-ticket/${dialogData.ticketUrl}`,
-        "_blank"
-      );
-    }
-  };
+  const TicketDownloadButton = () => (
+    <PDFDownloadLink
+      document={<TicketTemplate {...ticketData} />}
+      fileName="gomad-event-ticket.pdf"
+      className="w-full bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors duration-200"
+    >
+      {({ loading }) => (loading ? "Generating ticket..." : "Download Ticket")}
+    </PDFDownloadLink>
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex flex-col items-center p-4 md:p-8">
@@ -302,14 +328,7 @@ export default function PaymentPage() {
               {dialogData.message}
             </Dialog.Description>
             <div className="mt-6 flex flex-col gap-3">
-              {dialogData.success && (
-                <button
-                  onClick={downloadTicket}
-                  className="w-full bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors duration-200"
-                >
-                  Download Ticket
-                </button>
-              )}
+              {dialogData.success && ticketData && <TicketDownloadButton />}
               <button
                 onClick={() => setIsDialogOpen(false)}
                 className="w-full bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors duration-200"

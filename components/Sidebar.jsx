@@ -1,5 +1,4 @@
 "use client";
-// components/Sidebar.js
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MdDashboard, MdEventNote, MdSettings } from "react-icons/md"; // md is the prefix for material design icons
