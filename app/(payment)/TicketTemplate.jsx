@@ -1,58 +1,91 @@
+import React from "react";
 import {
   Document,
   Page,
-  Text,
+  StyleSheet,
   View,
   Image,
-  StyleSheet,
+  Text,
 } from "@react-pdf/renderer";
 
 const styles = StyleSheet.create({
   page: {
-    position: "relative",
-    width: "100%",
-    height: "100%",
+    width: 350,
+    height: 200,
+    flexDirection: "column", // Changed to column for vertical layout
+    paddingTop: 60, // Adjusted to start below the horizontal line on ticket.png
+    paddingHorizontal: 20, // Centralized padding
+    backgroundColor: "#fff",
   },
   background: {
     position: "absolute",
     width: "100%",
     height: "100%",
+    top: 0,
+    left: 0,
   },
-  content: {
-    position: "absolute",
-    top: "30%",
-    left: "10%",
-    right: "10%",
+  leftSide: {
+    width: "75%",
+    padding: 10,
+    justifyContent: "center",
   },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-    color: "#1E40AF",
+  rightSide: {
+    width: "25%",
+    height: "60%",
+    rounded: 10,
+    opacity: 0.5,
+    backgroundColor: "#00ADEF", // use your logo color
+    padding: 10,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  info: {
-    fontSize: 16,
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  logo: {
+    width: 50,
+    height: 50,
     marginBottom: 10,
-    color: "#374151",
+    // Added padding to prevent logo color from reaching the border
+    padding: 5,
   },
-  qrCode: {
-    width: 100,
-    height: 100,
-    marginTop: 20,
+  title: { fontSize: 14, fontWeight: "bold", marginLeft: 10 },
+  body: { marginTop: 10 },
+  textRow: { marginBottom: 4, fontSize: 10 },
+  qrWrapper: {
+    alignSelf: "flex-end",
+    width: 60,
+    height: 60,
+    marginTop: 10,
+  },
+  qrImage: { width: "100%", height: "100%" },
+  contentBox: {
+    backgroundColor: "rgba(0, 0, 0, 0.05)", // Light background for centralization
+    padding: 20, // Increased padding for better centralization
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 10,
   },
 });
 
-const TicketTemplate = ({ name, phone, qrCode }) => (
-  <Document>
-    <Page size="A6" style={styles.page}>
-      <Image src="/ticket.png" style={styles.background} />
-      <View style={styles.content}>
-        <Text style={styles.title}>GoMAD Event Ticket</Text>
-        <Text style={styles.info}>Name: {name}</Text>
-        <Text style={styles.info}>Phone: {phone}</Text>
-        <Image src={qrCode} style={styles.qrCode} />
-      </View>
-    </Page>
-  </Document>
-);
-
-export default TicketTemplate;
+export default function TicketTemplate({ name, phone, qrCode }) {
+  return (
+    <Document>
+      <Page size={[styles.page.width, styles.page.height]} style={styles.page}>
+        <Image src="/ticket.png" style={styles.background} />
+        <View style={styles.contentBox}>
+          <Image src="/logo.png" style={styles.logo} />
+          <Text style={styles.textRow}>Name: {name}</Text>
+          <Text style={styles.textRow}>Phone: {phone}</Text>
+          {qrCode && (
+            <View style={styles.qrWrapper}>
+              <Image src={qrCode} style={styles.qrImage} />
+            </View>
+          )}
+        </View>
+      </Page>
+    </Document>
+  );
+}

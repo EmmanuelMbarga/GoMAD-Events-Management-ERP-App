@@ -1,8 +1,9 @@
 // app/dashboard/page.js
-import BarCharts from "@/components/Barchart";
-import Calendar from "@/components/Calender";
-import Cards from "@/components/Card";
-import GuestManagement from "@/components/GuestManagement";
+import { Suspense } from "react";
+import Calendar from "../../components/Calender";
+import Cards from "../../components/Card";
+import GuestManagement from "../../components/GuestManagement";
+import ChartWrapper from "../../components/ChartWrapper";
 
 export default function Dashboard() {
   return (
@@ -10,7 +11,9 @@ export default function Dashboard() {
       <div className="flex flex-row justify-between">
         <div className="flex flex-col gap-5">
           <Cards />
-          <BarCharts />
+          <Suspense fallback={<div>Loading chart...</div>}>
+            <ChartWrapper />
+          </Suspense>
         </div>
         <Calendar />
       </div>

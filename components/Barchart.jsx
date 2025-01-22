@@ -1,8 +1,14 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { PieChart, Pie, Cell } from "recharts";
+import { Pie, Cell } from "recharts";
 import { ChevronDown } from "lucide-react";
+import dynamic from "next/dynamic";
+
+// Dynamically import the chart with no SSR
+const PieChart = dynamic(() => import("recharts").then((mod) => mod.PieChart), {
+  ssr: false,
+});
 
 const BarCharts = () => {
   const [checkIn, setCheckIn] = useState(0);
