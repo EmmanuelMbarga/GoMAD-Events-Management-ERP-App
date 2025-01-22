@@ -189,7 +189,7 @@ export default function PaymentPage() {
             <div className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-[#0033CC] mb-1">
-                  Full Name
+                  Full Name with Title
                 </label>
                 <input
                   type="text"
