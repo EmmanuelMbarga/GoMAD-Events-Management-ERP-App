@@ -10,12 +10,9 @@ import {
 
 const styles = StyleSheet.create({
   page: {
-    width: 350,
-    height: 200,
-    flexDirection: "column", // Changed to column for vertical layout
-    paddingTop: 60, // Adjusted to start below the horizontal line on ticket.png
-    paddingHorizontal: 20, // Centralized padding
-    backgroundColor: "#fff",
+    position: "relative",
+    width: 600, // Custom width for a digital ticket
+    height: 300, // Custom height for the ticket
   },
   background: {
     position: "absolute",
@@ -24,49 +21,33 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
   },
-  leftSide: {
-    width: "75%",
+  shortSection: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    width: "30%", // Covers the shorter vertical section
+    height: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.6)", // Semi-transparent overlay for readability
     padding: 10,
-    justifyContent: "center",
-  },
-  rightSide: {
-    width: "25%",
-    height: "60%",
-    rounded: 10,
-    opacity: 0.5,
-    backgroundColor: "#00ADEF", // use your logo color
-    padding: 10,
+    display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    borderTopRightRadius: 5,
+    borderBottomRightRadius: 5,
   },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+  userText: {
+    color: "#fff",
+    fontSize: 12,
+    marginBottom: 5,
   },
-  logo: {
-    width: 50,
-    height: 50,
-    marginBottom: 10,
-    // Added padding to prevent logo color from reaching the border
-    padding: 5,
-  },
-  title: { fontSize: 14, fontWeight: "bold", marginLeft: 10 },
-  body: { marginTop: 10 },
-  textRow: { marginBottom: 4, fontSize: 10 },
   qrWrapper: {
-    alignSelf: "flex-end",
-    width: 60,
-    height: 60,
     marginTop: 10,
+    width: 80,
+    height: 80,
   },
-  qrImage: { width: "100%", height: "100%" },
-  contentBox: {
-    backgroundColor: "rgba(0, 0, 0, 0.05)", // Light background for centralization
-    padding: 20, // Increased padding for better centralization
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 10,
+  qrImage: {
+    width: "100%",
+    height: "100%",
   },
 });
 
@@ -74,11 +55,13 @@ export default function TicketTemplate({ name, phone, qrCode }) {
   return (
     <Document>
       <Page size={[styles.page.width, styles.page.height]} style={styles.page}>
+        {/* Full Background Image */}
         <Image src="/ticket.png" style={styles.background} />
-        <View style={styles.contentBox}>
-          <Image src="/logo.png" style={styles.logo} />
-          <Text style={styles.textRow}>Name: {name}</Text>
-          <Text style={styles.textRow}>Phone: {phone}</Text>
+
+        {/* Short Section for User Details */}
+        <View style={styles.shortSection}>
+          <Text style={styles.userText}>Name: {name}</Text>
+          <Text style={styles.userText}>Phone: {phone}</Text>
           {qrCode && (
             <View style={styles.qrWrapper}>
               <Image src={qrCode} style={styles.qrImage} />

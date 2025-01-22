@@ -14,7 +14,7 @@ export default function Login() {
     <div className="flex flex-col justify-center items-center h-screen ">
       <div className="flex flex-col w-full h-full n items-center">
         <h1 className="flex font-bold mt-[114px] text-3xl text-[#1E232C] w-[280px] h-[78px]">
-          Welcome back! Glad to see you, Again!
+          Welcome back! Glad to see you!
         </h1>
         <div className="flex flex-col mt-[68px] w-[333px] h-[142px] justify-between rounded-lg items-center">
           <input
