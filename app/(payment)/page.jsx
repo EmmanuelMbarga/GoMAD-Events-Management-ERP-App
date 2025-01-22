@@ -80,7 +80,7 @@ export default function PaymentPage() {
             name: form.name,
             tel: form.phone,
             type: form.method,
-            amount: 100,
+            amount: 10,
           }),
         }
       );
