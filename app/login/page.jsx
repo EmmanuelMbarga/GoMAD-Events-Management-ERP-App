@@ -15,6 +15,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const [userType, setUserType] = useState(""); // Add this line
   const [isModalOpen, setIsModalOpen] = useState(false); // Add this line
+  const [isLoggingIn, setIsLoggingIn] = useState(false); // Add this line
   const router = useRouter(); // Update this line
 
   const togglePasswordVisibility = () => {
@@ -22,6 +23,7 @@ export default function Login() {
   };
 
   const handleLogin = async () => {
+    setIsLoggingIn(true); // Set loading state to true when starting login
     try {
       const response = await fetch(
         "https://gomad-backend.onrender.com/organiser/login",
@@ -52,6 +54,8 @@ export default function Login() {
       }
     } catch (error) {
       setError("Failed to login");
+    } finally {
+      setIsLoggingIn(false); // Reset loading state regardless of outcome
     }
   };
 
@@ -100,9 +104,10 @@ export default function Login() {
         {error && <p className="text-red-500 mt-4">{error}</p>}
         <button
           onClick={handleLogin}
-          className="w-[333px] h-[56px] mt-[35px] bg-[#00AAE8] hover:bg-[#00BFFF] text-center rounded-lg text-white text-base font-semibold"
+          disabled={isLoggingIn}
+          className="w-[333px] h-[56px] mt-[35px] bg-[#00AAE8] hover:bg-[#00BFFF] text-center rounded-lg text-white text-base font-semibold disabled:opacity-50"
         >
-          Login
+          {isLoggingIn ? "Logging in..." : "Login"}
         </button>
 
         <Modal
