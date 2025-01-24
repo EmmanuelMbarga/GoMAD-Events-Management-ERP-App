@@ -25,14 +25,17 @@ const GuestUser = () => {
     console.log("Request Params: ", { page, limit, search, userType });
 
     try {
-      const response = await axios.get(`http://localhost:5003/organiser`, {
-        params: {
-          page,
-          limit,
-          search,
-          userType,
-        },
-      });
+      const response = await axios.get(
+        `https://gomad-backend.onrender.com/organiser`,
+        {
+          params: {
+            page,
+            limit,
+            search,
+            userType,
+          },
+        }
+      );
       console.log("Response: ", response.data);
       setOrganisers(response.data.organisers || []); // Fallback to empty array
       setTotalOrganisers(response.data.totalOrganisers || 0); // Fallback to zero
