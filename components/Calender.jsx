@@ -31,7 +31,7 @@ const Calendar = () => {
   };
 
   const isHighlightedDate = (day) => {
-    const highlightedDates = [3, 4, 5];
+    const highlightedDates = [];
     return (
       highlightedDates.includes(day) &&
       currentMonth.getMonth() === 0 && // January
@@ -56,25 +56,25 @@ const Calendar = () => {
   };
 
   return (
-    <div className="w-full max-w-md bg-white p-6">
+    <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold">Events Schedule</h2>
+        <h2 className="text-xl font-semibold text-gray-800">Events Schedule</h2>
         <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-          <span className="text-purple-600">A</span>
+          <span className="text-[#1AC2EA] font-medium">A</span>
         </div>
       </div>
 
       <div className="flex justify-between items-center mb-6">
         <button
           onClick={prevMonth}
-          className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center text-white"
+          className="w-10 h-10 bg-[#1AC2EA] rounded-lg flex items-center justify-center text-white hover:bg-[#1AC2EA] transition-colors"
         >
           <ChevronLeft size={24} />
         </button>
-        <h3 className="text-lg font-medium">{`${monthName}, ${year}`}</h3>
+        <h3 className="text-lg font-medium text-gray-700">{`${monthName}, ${year}`}</h3>
         <button
           onClick={nextMonth}
-          className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center text-white"
+          className="w-10 h-10 bg-[#1AC2EA] rounded-lg flex items-center justify-center text-white hover:bg-[#1AC2EA] transition-colors"
         >
           <ChevronRight size={24} />
         </button>
@@ -82,7 +82,10 @@ const Calendar = () => {
 
       <div className="grid grid-cols-7 gap-2 mb-2">
         {weekDays.map((day) => (
-          <div key={day} className="text-center text-sm font-medium">
+          <div
+            key={day}
+            className="text-center text-sm font-medium text-gray-600"
+          >
             {day}
           </div>
         ))}
@@ -92,14 +95,14 @@ const Calendar = () => {
         {getDaysInMonth(currentMonth).map((day, index) => (
           <div
             key={index}
-            className={`h-10 flex items-center justify-center rounded-lg ${
+            className={`h-10 flex items-center justify-center rounded-lg text-sm font-medium ${
               day === null
-                ? ""
+                ? "text-gray-400"
                 : isCurrentDate(day)
-                ? "bg-purple-600 text-white"
+                ? "bg-[#1AC2EA] text-white"
                 : isHighlightedDate(day)
-                ? "bg-purple-400"
-                : "hover:bg-gray-100"
+                ? "bg-purple-400 text-white"
+                : "text-gray-700 hover:bg-gray-100"
             }`}
           >
             {day}
@@ -109,7 +112,7 @@ const Calendar = () => {
 
       <div className="mt-6 border-t pt-4">
         <div className="flex justify-between items-center">
-          <p className="text-sm font-medium">
+          <p className="text-sm font-medium text-gray-700">
             {new Date().toLocaleDateString("en-US", {
               weekday: "long",
               year: "numeric",
@@ -117,7 +120,7 @@ const Calendar = () => {
               day: "numeric",
             })}
           </p>
-          <button className="text-gray-500">
+          <button className="text-gray-500 hover:text-gray-700">
             <MoreVertical size={20} />
           </button>
         </div>
