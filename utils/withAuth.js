@@ -1,6 +1,6 @@
 "use client";
 // filepath: /c:/Users/user/Desktop/Projects/3- In Progress/GoMAD Event Management App/frontend/utils/withAuth.js
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useAuth } from "../context/AuthContext"; // Assuming you have an AuthContext
 
@@ -10,7 +10,7 @@ const withAuth = (WrappedComponent) => {
     const { user, loading } = useAuth();
 
     useEffect(() => {
-      if (!loading && !user) {
+      if (!user) {
         router.replace("/login"); // Redirect to login if not authenticated
       }
     }, [user, loading, router]);
@@ -25,6 +25,8 @@ const withAuth = (WrappedComponent) => {
   AuthenticatedComponent.displayName = `withAuth(${
     WrappedComponent.displayName || WrappedComponent.name || "Component"
   })`;
+
+  return AuthenticatedComponent;
 };
 
 export default withAuth;

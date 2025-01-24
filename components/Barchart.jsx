@@ -18,7 +18,7 @@ const BarCharts = () => {
   const fetchGuestsSummary = async () => {
     try {
       const response = await axios.get(
-        `https://anjeagwe2025-backend.onrender.com/api/checkin-summary`
+        `https://gomad-backend.onrender.com/api/checkin-summary`
       );
       console.log("Response: ", response.data);
       setCheckIn(response.data.totalCheckedIn);

@@ -63,7 +63,6 @@ const Calendar = () => {
           <span className="text-[#1AC2EA] font-medium">A</span>
         </div>
       </div>
-
       <div className="flex justify-between items-center mb-6">
         <button
           onClick={prevMonth}
@@ -71,7 +70,9 @@ const Calendar = () => {
         >
           <ChevronLeft size={24} />
         </button>
-        <h3 className="text-lg font-medium text-gray-700">{`${monthName}, ${year}`}</h3>
+        <h3 className="text-lg font-medium text-gray-700">
+          {monthName}, {year}
+        </h3>
         <button
           onClick={nextMonth}
           className="w-10 h-10 bg-[#1AC2EA] rounded-lg flex items-center justify-center text-white hover:bg-[#1AC2EA] transition-colors"
@@ -79,7 +80,6 @@ const Calendar = () => {
           <ChevronRight size={24} />
         </button>
       </div>
-
       <div className="grid grid-cols-7 gap-2 mb-2">
         {weekDays.map((day) => (
           <div
@@ -90,7 +90,6 @@ const Calendar = () => {
           </div>
         ))}
       </div>
-
       <div className="grid grid-cols-7 gap-2">
         {getDaysInMonth(currentMonth).map((day, index) => (
           <div
@@ -109,7 +108,6 @@ const Calendar = () => {
           </div>
         ))}
       </div>
-
       <div className="mt-6 border-t pt-4">
         <div className="flex justify-between items-center">
           <p className="text-sm font-medium text-gray-700">

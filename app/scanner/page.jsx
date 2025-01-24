@@ -1,5 +1,5 @@
 "use client";
-import withAuth from "@/utils/withAuth";
+import withAuth from "../../utils/withAuth";
 import { useState, useEffect } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { FaCheck, FaTimes } from "react-icons/fa";
@@ -124,7 +124,7 @@ function Scanner() {
   const closeModal = () => setShowModal(false);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-white p-4">
       <Link href={`/login`}>
         <div className="absolute flex rounded-full border-2 border-blue-500 top-4 right-4">
           <LogOut className="w-10 h-10 p-2 text-blue-500" />{" "}

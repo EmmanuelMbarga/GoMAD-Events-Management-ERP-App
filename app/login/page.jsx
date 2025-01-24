@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"; // Update this import
 import Modal from "react-modal"; // Add this import
 
 // Set the app element for accessibility
-Modal.setAppElement("#__next");
+Modal.setAppElement("body");
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,18 +23,17 @@ export default function Login() {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch(
-        "https://gomad-backend.onrender.com/organiser/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, password }),
-        }
-      );
+      const response = await fetch("http://localhost:5003/organiser/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, password }),
+      });
 
       const data = await response.json();
 
       if (response.ok) {
+        localStorage.setItem("userType", data.organiser.userType); // Store the user type
+
         if (data.organiser.userType === "admin") {
           // Allow admin to choose between dashboard and scanner
           setError("");

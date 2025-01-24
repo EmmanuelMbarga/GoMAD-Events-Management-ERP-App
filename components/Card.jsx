@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -11,10 +11,10 @@ const Carts = () => {
   const fetchDashboardData = async () => {
     try {
       const response = await axios.get(
-        `https://anjeagwe2025-backend.onrender.com/api/dashboard`
+        `https://gomad-backend.onrender.com/api/summary`
       );
-      setTotalSales(response.data.totalSales);
-      setTotalUsers(response.data.totalUsers);
+      setTotalUsers(response.data.totalParticipants);
+      setTotalSales(response.data.totalParticipants * 10000);
     } catch (error) {
       console.error("Error fetching dashboard data:", error.message);
     }
@@ -34,7 +34,9 @@ const Carts = () => {
           <h3 className="text-sm font-medium">Total Users</h3>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-2xl font-bold">{totalUsers.toLocaleString()}</span>
+          <span className="text-2xl font-bold">
+            {totalUsers.toLocaleString()}
+          </span>
           <span className="px-2 py-1 rounded text-xs bg-green-50 text-green-600">
             +16%
           </span>
@@ -48,7 +50,9 @@ const Carts = () => {
           <h3 className="text-sm font-medium">Total Sales</h3>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-2xl font-bold">{totalSales.toLocaleString()} FCFA</span>
+          <span className="text-2xl font-bold">
+            {totalSales.toLocaleString()} FCFA
+          </span>
           <span className="px-2 py-1 rounded text-xs bg-green-50 text-[#1AC2EA]">
             +16%
           </span>

@@ -1,5 +1,6 @@
 import DashboardLayout from "../components/DashboardLayout";
 import { useRouter } from "next/router";
+import { AuthProvider } from "../context/AuthContext";
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -7,13 +8,19 @@ function MyApp({ Component, pageProps }) {
 
   if (isDashboardPage) {
     return (
-      <DashboardLayout>
-        <Component {...pageProps} />
-      </DashboardLayout>
+      <AuthProvider>
+        <DashboardLayout>
+          <Component {...pageProps} />
+        </DashboardLayout>
+      </AuthProvider>
     );
   }
 
-  return <Component {...pageProps} />;
+  return (
+    <AuthProvider>
+      <Component {...pageProps} />
+    </AuthProvider>
+  );
 }
 
 export default MyApp;

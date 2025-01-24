@@ -1,11 +1,11 @@
-// app/dashboard/page.js
+"use client";
 import { Suspense } from "react";
 import Calendar from "../../components/Calender";
 import Cards from "../../components/Card";
 import GuestManagement from "../../components/GuestManagement";
 import ChartWrapper from "../../components/ChartWrapper";
 import DashboardLayout from "../../components/DashboardLayout";
-import withAuth from "@/utils/withAuth";
+import withAuth from "../../utils/withAuth";
 
 function Dashboard() {
   return (
