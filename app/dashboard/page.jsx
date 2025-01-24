@@ -9,7 +9,7 @@ import withAuth from "../../utils/withAuth";
 
 function Dashboard() {
   return (
-    <div className="flex flex-col w-full justify-between bg-gray-50">
+    <div className="flex flex-col w-full justify-between bg-white">
       <div className="flex flex-row justify-between">
         <div className="flex flex-col gap-5">
           <Cards />
