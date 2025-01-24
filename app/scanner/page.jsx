@@ -80,11 +80,14 @@ function Scanner() {
     }
 
     try {
-      const response = await fetch("/api/validate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ qrCode }),
-      });
+      const response = await fetch(
+        "https://gomad-backend.onrender.com/api/validate",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ qrCode }),
+        }
+      );
 
       const data = await response.json();
 
