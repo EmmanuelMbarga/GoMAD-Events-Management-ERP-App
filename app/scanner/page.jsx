@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { FaCheck, FaTimes } from "react-icons/fa";
+import { LogOut } from "lucide-react"; // Add this import
 import Link from "next/link";
 
 const SuccessComponent = ({ closeModal }) => {
@@ -123,21 +124,16 @@ export default function Scanner() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-      <Link href={`/`}>
-        <div className="absolute top-4 right-4">
-          <img
-            src="/node.png"
-            alt="User Profile"
-            className="w-10 h-10 rounded-full border-2 border-blue-500"
-          />
+      <Link href={`/login`}>
+        <div className="absolute flex rounded-full border-2 border-blue-500 top-4 right-4">
+          <LogOut className="w-10 h-10 p-2 text-blue-500" />{" "}
         </div>
       </Link>
 
       <div className="text-center">
         <h1 className="text-lg font-medium text-gray-700">Welcome to</h1>
-        <h2 className="text-xl font-bold text-gray-800">
-          AnjeAgwe2025–25th Wedding Anniversary Check-in
-        </h2>
+        <img src="/logo.png" alt="Logo" className="border-blue-500" />
+        <h2 className="text-xl font-bold text-gray-800">Check-in</h2>
       </div>
 
       <div id="qr-reader" className="mt-8 flex flex-col"></div>
@@ -145,7 +141,7 @@ export default function Scanner() {
       <div className="mt-10">
         <button
           onClick={validateQRCode}
-          className="bg-purple-600 text-white font-bold py-2 px-6 rounded-lg shadow-lg hover:bg-purple-700"
+          className="bg-[#00AAE8] text-white font-bold py-2 px-6 rounded-lg shadow-lg hover:bg-white hover:text-[#1AC2EA] hover:border-[#1AC2EA] hover:border"
         >
           Start Verification
         </button>

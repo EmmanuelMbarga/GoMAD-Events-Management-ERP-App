@@ -26,9 +26,9 @@ const GuestUser = () => {
   });
   const [message, setMessage] = useState("");
 
-  const togglePasswordVisibility = () => {
+  /*const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
-  };
+  };*/
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -41,15 +41,18 @@ const GuestUser = () => {
 
   const handleAddUser = async () => {
     try {
-      const response = await fetch("http://localhost:5003/organiser", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: newUser.name,
-          password: newUser.password,
-          userType: newUser.role,
-        }),
-      });
+      const response = await fetch(
+        "https://gomad-backend.onrender.com/organiser",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: newUser.name,
+            password: newUser.password,
+            userType: newUser.role,
+          }),
+        }
+      );
       if (response.status === 201) {
         setMessage("Organiser created successfully");
         fetchOrganisers(currentPage, searchQuery, userType); // Refresh the list
@@ -66,7 +69,7 @@ const GuestUser = () => {
   const handleDeleteUser = async (name) => {
     try {
       const response = await fetch(
-        `http://localhost:5003/organiser/name/${name}`,
+        `https://gomad-backend.onrender.com/organiser/name/${name}`,
         {
           method: "DELETE",
         }
@@ -85,7 +88,7 @@ const GuestUser = () => {
   const handleUpdateUserRole = async (name, newRole) => {
     try {
       const response = await fetch(
-        `http://localhost:5003/organiser/name/${name}`,
+        `https://gomad-backend.onrender.com/organiser/name/${name}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -106,7 +109,7 @@ const GuestUser = () => {
   const handleExportData = async (format = "json") => {
     try {
       const response = await fetch(
-        `http://localhost:5003/organiser/export?format=${format}`
+        `https://gomad-backend.onrender.com/organiser/export?format=${format}`
       );
       if (response.ok) {
         const blob = await response.blob();
@@ -301,7 +304,6 @@ const GuestUser = () => {
             <tr className="bg-gray-200">
               <th className="border border-gray-300 p-2">Full Name</th>
               <th className="border border-gray-300 p-2">Rule</th>
-              <th className="border border-gray-300 p-2">Password</th>
               <th className="border border-gray-300 p-2">Action</th>
             </tr>
           </thead>
@@ -332,23 +334,6 @@ const GuestUser = () => {
                       <option value="admin">Admin</option>
                       <option value="staff">Staff</option>
                     </select>
-                  </td>
-                  <td className="border border-gray-300 p-2">
-                    <div className="flex justify-between">
-                      <div
-                        className="div"
-                        type={showPassword ? "text" : "password"}
-                      >
-                        {showPassword ? "xxxx" : organiser.password}
-                      </div>
-                      <p
-                        role="button"
-                        className="my-1"
-                        onClick={() => togglePasswordVisibility(organiser.id)}
-                      >
-                        {showPassword ? <FaEye /> : <FaEyeSlash />}
-                      </p>
-                    </div>
                   </td>
                   <td className="border border-gray-300 text-center p-2">
                     <button

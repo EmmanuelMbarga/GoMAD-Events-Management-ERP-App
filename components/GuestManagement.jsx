@@ -47,7 +47,7 @@ const GuestManagement = () => {
   const handleExportData = async (format = "json") => {
     try {
       const response = await fetch(
-        `http://localhost:5003/api/export?format=${format}`
+        `https://gomad-backend.onrender.com/api/export?format=${format}`
       );
       if (response.ok) {
         const blob = await response.blob();

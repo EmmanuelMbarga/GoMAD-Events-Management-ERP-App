@@ -15,7 +15,7 @@ export async function POST(req) {
     const qrCodeData = body.qrCode.replace(/"/g, "");
 
     const response = await axios.post(
-      "https://anjeagwe2025-backend.onrender.com/api/validate",
+      "https://gomad-backend.onrender.com/api/validate",
       { qrCode: qrCodeData }, // Send cleaned data
       {
         headers: { "Content-Type": "application/json" },

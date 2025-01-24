@@ -6,7 +6,7 @@ export async function POST(req) {
 
   try {
     const response = await axios.post(
-      "https://anjeagwe2025-backend.onrender.com/api/register",
+      "https://gomad-backend.onrender.com/api/register",
       body,
       {
         headers: { "Content-Type": "application/json" },
