@@ -7,7 +7,9 @@ export default function Layout({ children }) {
       <Sidebar /> {/* Sidebar spans full height */}
       <div className="flex flex-col flex-grow">
         <Navbar />
-        <main className="flex-grow overflow-auto p-4">{children}</main>
+        <main className="flex-grow overflow-auto p-4 bg-gray-100">
+          {children}
+        </main>
       </div>
     </div>
   );

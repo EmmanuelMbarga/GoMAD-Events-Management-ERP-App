@@ -10,13 +10,13 @@ export default function Navbar() {
       </div>
       <div className="flex items-center space-x-4">
         <button
-          className="p-2 bg-gray-100 rounded-full"
+          className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
           aria-label="Notifications"
         >
           <MdNotifications size={24} />
         </button>
         <div className="flex items-center border rounded p-1 space-x-2">
-          <Link href="/">
+          <Link href="/login">
             <img
               src="/logo.png"
               alt="Profile"

@@ -73,7 +73,7 @@ const Sidebar = () => {
           <div className="p-6 flex justify-center">
             <button
               onClick={toggleCollapse}
-              className="flex items-center justify-center p-2 bg-gray-100 rounded-lg hover:bg-gray-200"
+              className="flex items-center justify-center p-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
               aria-label="Toggle sidebar"
             >
               {isCollapsed ? (
@@ -110,7 +110,7 @@ const Sidebar = () => {
           </div>
         )}
 
-        {/* Bottom Section */}
+        {/* Bottom Section 
         {!isCollapsed && (
           <div className="my-6">
             <SidebarItem
@@ -121,7 +121,7 @@ const Sidebar = () => {
               isCollapsed={isCollapsed}
             />
           </div>
-        )}
+        )}*/}
       </div>
     </>
   );
