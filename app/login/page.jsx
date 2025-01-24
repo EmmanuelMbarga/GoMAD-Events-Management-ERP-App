@@ -100,7 +100,7 @@ export default function Login() {
         {error && <p className="text-red-500 mt-4">{error}</p>}
         <button
           onClick={handleLogin}
-          className="w-[333px] h-[56px] mt-[35px] bg-[#00AAE8] text-center rounded-lg text-white text-base font-semibold"
+          className="w-[333px] h-[56px] mt-[35px] bg-[#00AAE8] hover:bg-[#00BFFF] text-center rounded-lg text-white text-base font-semibold"
         >
           Login
         </button>
@@ -119,13 +119,13 @@ export default function Login() {
             <div className="flex flex-col mt-4">
               <button
                 onClick={() => handleAdminLogin("/scanner")}
-                className="w-full h-[56px] mt-[15px] bg-[#00AAE8] text-center rounded-lg text-white text-base font-semibold"
+                className="w-full h-[56px] mt-[15px] bg-[#00AAE8] hover:bg-[#00BFFF] text-center rounded-lg text-white text-base font-semibold"
               >
                 Go to Scanner
               </button>
               <button
                 onClick={() => handleAdminLogin("/dashboard")}
-                className="w-full h-[56px] mt-[15px] bg-[#00AAE8] text-center rounded-lg text-white text-base font-semibold"
+                className="w-full h-[56px] mt-[15px] bg-[#00AAE8] hover:bg-[#00BFFF] text-center rounded-lg text-white text-base font-semibold"
               >
                 Go to Dashboard
               </button>
