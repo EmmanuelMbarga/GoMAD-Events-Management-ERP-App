@@ -25,14 +25,11 @@ export default function Login() {
   const handleLogin = async () => {
     setIsLoggingIn(true); // Set loading state to true when starting login
     try {
-      const response = await fetch(
-        "https://gomad-backend.onrender.com/organiser/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, password }),
-        }
-      );
+      const response = await fetch("http://localhost:5003/organiser/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, password }),
+      });
 
       const data = await response.json();
 

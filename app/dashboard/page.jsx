@@ -24,11 +24,4 @@ function Dashboard() {
   );
 }
 
-function DashboardPage() {
-  return (
-    <DashboardLayout>
-      <Dashboard />
-    </DashboardLayout>
-  );
-}
-export default withAuth(DashboardPage);
+export default withAuth(Dashboard);
