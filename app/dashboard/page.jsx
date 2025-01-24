@@ -5,6 +5,7 @@ import Cards from "../../components/Card";
 import GuestManagement from "../../components/GuestManagement";
 import ChartWrapper from "../../components/ChartWrapper";
 import DashboardLayout from "../../components/DashboardLayout";
+import withAuth from "@/utils/withAuth";
 
 function Dashboard() {
   return (
@@ -23,10 +24,11 @@ function Dashboard() {
   );
 }
 
-export default function DashboardPage() {
+function DashboardPage() {
   return (
     <DashboardLayout>
       <Dashboard />
     </DashboardLayout>
   );
 }
+export default withAuth(DashboardPage);
