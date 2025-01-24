@@ -10,16 +10,20 @@ import withAuth from "../../utils/withAuth";
 function Dashboard() {
   return (
     <div className="flex flex-col w-full justify-between bg-white">
-      <div className="flex flex-row justify-between">
-        <div className="flex flex-col gap-5">
+      <div className="flex flex-col lg:flex-row justify-between gap-4">
+        <div className="flex flex-col gap-5 w-full lg:w-2/3">
           <Cards />
           <Suspense fallback={<div>Loading chart...</div>}>
             <ChartWrapper />
           </Suspense>
         </div>
-        <Calendar />
+        <div className="w-full lg:w-1/3">
+          <Calendar />
+        </div>
       </div>
-      <GuestManagement />
+      <div className="mt-4">
+        <GuestManagement />
+      </div>
     </div>
   );
 }

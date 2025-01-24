@@ -91,50 +91,51 @@ const GuestManagement = () => {
   };
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Participants Management</h1>
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex flex-row gap-2.5 border border-gray-300 rounded-lg px-4 py-3">
+    <div className="p-2 sm:p-6">
+      <h1 className="text-xl sm:text-2xl font-bold mb-4">
+        Participants Management
+      </h1>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-2">
+        <div className="w-full sm:w-auto flex flex-row gap-2.5 border border-gray-300 rounded-lg px-4 py-3">
           <MdSearch size={24} />
           <input
             type="text"
-            className="text-base font-light outline-none"
+            className="w-full text-base font-light outline-none"
             placeholder="Search Participants..."
             value={searchQuery}
             onChange={handleSearch}
           />
         </div>
-        <div className="flex items-center border border-gray-300 rounded-lg px-4 py-3">
-          <MdFilterAlt size={24} />
-          <span className="ml-2">Filter</span>
-          <select
-            value={paymentMethod}
-            onChange={handleFilter}
-            className="ml-2 border-none outline-none bg-transparent"
-          >
-            <option value="all">All</option>
-            <option value="momo">MOMO</option>
-            <option value="om">OM</option>
-          </select>
-        </div>
-        <div className="flex items-center rounded-lg gap-2 px-4 py-3">
-          {/* Export Button */}
-          <button
-            onClick={() => handleExportData("json")}
-            className="bg-blue-400 px-4 py-4 flex hover:bg-blue-500 rounded-lg text-white font-bold "
-          >
-            {" "}
-            <Download />
-            Export JSON
-          </button>
-          <button
-            onClick={() => handleExportData("csv")}
-            className="bg-blue-400 px-4 py-4 flex hover:bg-blue-500 rounded-lg text-white font-bold "
-          >
-            {" "}
-            <Download />
-            Export CSV
-          </button>
+        <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+          <div className="flex-1 sm:flex-none items-center border border-gray-300 rounded-lg px-4 py-3">
+            <MdFilterAlt size={24} className="inline" />
+            <span className="ml-2">Filter</span>
+            <select
+              value={paymentMethod}
+              onChange={handleFilter}
+              className="ml-2 border-none outline-none bg-transparent"
+            >
+              <option value="all">All</option>
+              <option value="momo">MOMO</option>
+              <option value="om">OM</option>
+            </select>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => handleExportData("json")}
+              className="flex-1 sm:flex-none bg-blue-400 px-4 py-2 flex items-center justify-center gap-2 hover:bg-blue-500 rounded-lg text-white font-bold"
+            >
+              <Download />
+              Export JSON
+            </button>
+            <button
+              onClick={() => handleExportData("csv")}
+              className="flex-1 sm:flex-none bg-blue-400 px-4 py-2 flex items-center justify-center gap-2 hover:bg-blue-500 rounded-lg text-white font-bold"
+            >
+              <Download />
+              Export CSV
+            </button>
+          </div>
         </div>
       </div>
       {/* Message Pop-up */}

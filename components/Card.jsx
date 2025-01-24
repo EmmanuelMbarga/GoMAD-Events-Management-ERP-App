@@ -25,8 +25,8 @@ const Carts = () => {
   }, []);
 
   return (
-    <div className="flex gap-4">
-      <div className="w-[344px] h-[118px] bg-white rounded-lg p-4 shadow-sm">
+    <div className="flex flex-col sm:flex-row gap-4">
+      <div className="w-full sm:w-[344px] h-[118px] bg-white rounded-lg p-4 shadow-sm">
         <div className="flex items-center gap-3 mb-3">
           <div className="bg-purple-50 p-2 rounded-full">
             <Users className="w-5 h-5 text-[#1AC2EA]" />
@@ -42,7 +42,7 @@ const Carts = () => {
           </span>
         </div>
       </div>
-      <div className="w-[344px] h-[118px] bg-white rounded-lg p-4 shadow-sm">
+      <div className="w-full sm:w-[344px] h-[118px] bg-white rounded-lg p-4 shadow-sm">
         <div className="flex items-center gap-3 mb-3">
           <div className="bg-purple-50 p-2 rounded-full">
             <ArrowUp className="w-5 h-5 text-[#1AC2EA]" />

@@ -180,7 +180,7 @@ const GuestUser = () => {
   };
 
   return (
-    <div className="p-6" id="__next">
+    <div className="p-2 sm:p-6" id="__next">
       {/* Modal for Adding User */}
       <Modal
         isOpen={isModalOpen}
@@ -245,72 +245,70 @@ const GuestUser = () => {
           </button>
         </div>
       )}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex flex-row gap-2.5 border border-gray-300 rounded-lg px-4 py-3">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-2">
+        <div className="w-full sm:w-auto flex flex-row gap-2.5 border border-gray-300 rounded-lg px-4 py-3">
           <MdSearch size={24} />
           <input
             type="text"
-            className="text-base font-light outline-none"
+            className="w-full text-base font-light outline-none"
             placeholder="Search user..."
             value={searchQuery}
             onChange={handleSearch}
           />
         </div>
-        <div className="flex items-center border border-gray-300 rounded-lg px-4 py-3">
-          <MdFilterAlt size={24} />
-          <span className="ml-2">Filter</span>
-          <select
-            value={userType}
-            onChange={handleFilter}
-            className="ml-2 border-none outline-none bg-transparent"
-          >
-            <option value="all">All</option>
-            <option value="admin">Admin</option>
-            <option value="staff">Staff</option>
-          </select>
-        </div>
-        <div className="flex items-center rounded-lg gap-2 px-4 py-3">
-          {/* Add User Button */}
-          <button
-            onClick={toggleModal}
-            className="bg-blue-400 hover:bg-blue-500 px-4 py-4 rounded-lg text-white font-bold"
-          >
-            Add User
-          </button>
-        </div>
-        <div className="flex items-center rounded-lg gap-2 px-4 py-3">
-          {/* Export Button */}
-          <button
-            onClick={() => handleExportData("json")}
-            className="bg-blue-400 px-4 py-4 flex hover:bg-blue-500 rounded-lg text-white font-bold "
-          >
-            {" "}
-            <Download />
-            Export JSON
-          </button>
-          <button
-            onClick={() => handleExportData("csv")}
-            className="bg-blue-400 px-4 py-4 flex hover:bg-blue-500 rounded-lg text-white font-bold "
-          >
-            {" "}
-            <Download />
-            Export CSV
-          </button>
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <div className="w-full sm:w-auto flex items-center border border-gray-300 rounded-lg px-4 py-3">
+            <MdFilterAlt size={24} />
+            <span className="ml-2">Filter</span>
+            <select
+              value={userType}
+              onChange={handleFilter}
+              className="ml-2 border-none outline-none bg-transparent w-full sm:w-auto"
+            >
+              <option value="all">All</option>
+              <option value="admin">Admin</option>
+              <option value="staff">Staff</option>
+            </select>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={toggleModal}
+              className="w-full sm:w-auto bg-blue-400 hover:bg-blue-500 px-4 py-2 rounded-lg text-white font-bold"
+            >
+              Add User
+            </button>
+            <button
+              onClick={() => handleExportData("json")}
+              className="w-full sm:w-auto bg-blue-400 px-4 py-2 flex items-center justify-center gap-2 hover:bg-blue-500 rounded-lg text-white font-bold"
+            >
+              <Download />
+              Export JSON
+            </button>
+            <button
+              onClick={() => handleExportData("csv")}
+              className="w-full sm:w-auto bg-blue-400 px-4 py-2 flex items-center justify-center gap-2 hover:bg-blue-500 rounded-lg text-white font-bold"
+            >
+              <Download />
+              Export CSV
+            </button>
+          </div>
         </div>
       </div>
       <div className="overflow-x-auto">
-        <table className="table-auto w-full border-collapse border border-gray-300">
+        <table className="min-w-full table-auto border-collapse border border-gray-300">
           <thead>
             <tr className="bg-gray-200">
-              <th className="border border-gray-300 p-2">Full Name</th>
-              <th className="border border-gray-300 p-2">Rule</th>
-              <th className="border border-gray-300 p-2">Action</th>
+              <th className="border border-gray-300 p-2 text-left">
+                Full Name
+              </th>
+              <th className="border border-gray-300 p-2 text-left">Rule</th>
+              <th className="border border-gray-300 p-2 text-left">Action</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan="5" className="text-center p-4">
+                <td colSpan="3" className="text-center p-4">
                   Loading...
                 </td>
               </tr>
@@ -323,31 +321,31 @@ const GuestUser = () => {
                   <td className="border border-gray-300 p-2">
                     {organiser.name}
                   </td>
-                  <td className="border border-gray-300 p-2 text-center ">
+                  <td className="border border-gray-300 p-2">
                     <select
                       value={organiser.userType}
                       onChange={(e) =>
                         handleUpdateUserRole(organiser.name, e.target.value)
                       }
-                      className="border-none outline-none bg-transparent"
+                      className="w-full sm:w-auto border-none outline-none bg-transparent"
                     >
                       <option value="admin">Admin</option>
                       <option value="staff">Staff</option>
                     </select>
                   </td>
-                  <td className="border border-gray-300 text-center p-2">
+                  <td className="border border-gray-300 p-2">
                     <button
                       onClick={() => handleDeleteUser(organiser.name)}
-                      className="bg-blue-400 px-2 rounded-lg py-2 text-white font-bold"
+                      className="w-full sm:w-auto bg-blue-400 px-2 rounded-lg py-2 text-white font-bold"
                     >
                       Delete
-                    </button>{" "}
+                    </button>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="5" className="text-center p-4">
+                <td colSpan="3" className="text-center p-4">
                   No Organisers found.
                 </td>
               </tr>
@@ -355,13 +353,13 @@ const GuestUser = () => {
           </tbody>
         </table>
       </div>
-      <div className="flex justify-between items-center mt-4">
+      <div className="flex flex-col sm:flex-row justify-between items-center mt-4 gap-2">
         <div className="flex items-center">
           <span>Showing</span>
           <select
             value={limit}
             onChange={handleLimitChange}
-            className="ml-2 border border-gray-300 rounded-md p-1"
+            className="mx-2 border border-gray-300 rounded-md p-1"
           >
             {[10, 20, 30].map((num) => (
               <option key={num} value={num}>
@@ -369,11 +367,12 @@ const GuestUser = () => {
               </option>
             ))}
           </select>
+          <span>entries</span>
         </div>
-        <span>
+        <span className="text-sm">
           Showing {organisers.length} of {totalOrganisers} records
         </span>
-        <div className="flex space-x-2">
+        <div className="flex flex-wrap justify-center gap-1">
           {Array.from(
             { length: Math.max(1, Math.ceil(totalOrganisers / limit)) },
             (_, index) => index + 1
