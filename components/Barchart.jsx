@@ -33,7 +33,7 @@ const BarCharts = () => {
   }, []);
 
   const data = [
-    { name: "Checked In", value: checkIn, color: "#9333EA" },
+    { name: "Checked In", value: checkIn, color: "#00AAE8" },
     { name: "UnChecked In", value: notCheckIn, color: "#F3E8FF" },
   ];
 
@@ -81,7 +81,7 @@ const BarCharts = () => {
 
         <div className="flex justify-between mt-6">
           <div className="flex items-start gap-2">
-            <div className="w-3 h-3 mt-1.5 rounded-full bg-[#9333EA]"></div>
+            <div className="w-3 h-3 mt-1.5 rounded-full bg-[#1AC2EA]"></div>
             <div>
               <p className="text-sm text-gray-500">Checked In</p>
               <p className="text-lg font-semibold">{checkedInPercentage}%</p>

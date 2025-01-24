@@ -8,7 +8,7 @@ import DashboardLayout from "../../components/DashboardLayout";
 
 function Dashboard() {
   return (
-    <div className="flex flex-col w-full justify-between">
+    <div className="flex flex-col w-full justify-between bg-gray-50">
       <div className="flex flex-row justify-between">
         <div className="flex flex-col gap-5">
           <Cards />
