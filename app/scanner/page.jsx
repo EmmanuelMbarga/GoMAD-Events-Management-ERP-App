@@ -1,5 +1,5 @@
 "use client";
-import withAuth from "../utils/withAuth";
+import withAuth from "@/utils/withAuth";
 import { useState, useEffect } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { FaCheck, FaTimes } from "react-icons/fa";
