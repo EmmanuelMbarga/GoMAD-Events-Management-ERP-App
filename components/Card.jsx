@@ -1,107 +1,61 @@
-"use client";
+"use client"
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Users, ClipboardCheck, XCircle, Calendar } from "lucide-react";
+import { Users, ArrowUp } from "lucide-react";
 
-const Cards = () => {
-  const [totalGuests, setTotalGuests] = useState(0);
-  const [totalGuestsEvent1, setTotalGuestsEvent1] = useState(0);
-  const [totalGuestsEvent2, setTotalGuestsEvent2] = useState(0);
-  const [totalGuestsEvent3, setTotalGuestsEvent3] = useState(0);
+const Carts = () => {
+  const [totalSales, setTotalSales] = useState(0);
+  const [totalUsers, setTotalUsers] = useState(0);
 
-  // Fetch guests from API
-  const fetchGuestsSummary = async () => {
+  const fetchDashboardData = async () => {
     try {
       const response = await axios.get(
-        `https://anjeagwe2025-backend.onrender.com/api/summary`
+        `https://anjeagwe2025-backend.onrender.com/api/dashboard`
       );
-      console.log("Response: ", response.data);
-      setTotalGuests(response.data.totalGuests);
-      setTotalGuestsEvent1(response.data.totalGuestsEvent1);
-      setTotalGuestsEvent2(response.data.totalGuestsEvent2);
-      setTotalGuestsEvent3(response.data.totalGuestsEvent3);
+      setTotalSales(response.data.totalSales);
+      setTotalUsers(response.data.totalUsers);
     } catch (error) {
-      console.error("Error fetching guests:", error.message);
+      console.error("Error fetching dashboard data:", error.message);
     }
   };
 
   useEffect(() => {
-    fetchGuestsSummary();
-  }, [totalGuests]);
-
-  const stats = [
-    {
-      title: "Total Guest",
-      value: totalGuests,
-      icon: Users,
-      change: "+12%",
-      isPositive: true,
-      update: "Date: January 3-5, 2025",
-    },
-    {
-      title: "Pool Party",
-      value: totalGuestsEvent1,
-      icon: ClipboardCheck,
-      change: "+5%",
-      isPositive: true,
-      update: "Date: January 3, 2025",
-    },
-    {
-      title: "Joining Ceremony",
-      value: totalGuestsEvent2,
-      icon: XCircle,
-      change: "+8%",
-      isPositive: false,
-      update: "Date: January 4, 2025",
-    },
-    {
-      title: "Thanks Giving Service",
-      value: totalGuestsEvent3,
-      icon: Calendar,
-      change: "+12%",
-      isPositive: true,
-      update: "Date: January 5, 2025",
-    },
-  ];
+    fetchDashboardData();
+  }, []);
 
   return (
-    <div>
-      <div className="grid grid-cols-2 gap-8 justify-evenly">
-        {" "}
-        {/* Adjusted gap */}
-        {stats.map((stat, index) => (
-          <div
-            key={index}
-            className="w-80 h-40 bg-white rounded-lg p-6 shadow-sm"
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <div className="bg-purple-50 p-3 rounded-full">
-                <stat.icon className="w-6 h-6 text-purple-600" />
-              </div>
-              <h3 className="text-base font-medium">{stat.title}</h3>
-            </div>
-
-            <div className="flex justify-between items-center">
-              <span className="text-4xl font-bold">{stat.value}</span>
-              <span
-                className={`px-2 py-1 rounded text-xs ${
-                  stat.isPositive
-                    ? "bg-green-50 text-green-600"
-                    : "bg-red-50 text-red-600"
-                }`}
-              >
-                {stat.change}
-              </span>
-            </div>
-
-            <div className="mt-4 pt-4 border-t border-gray-100">
-              <p className="text-sm text-gray-500">{stat.update}</p>
-            </div>
+    <div className="flex gap-4">
+      <div className="w-[344px] h-[118px] bg-white rounded-lg p-4 shadow-sm">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="bg-purple-50 p-2 rounded-full">
+            <Users className="w-5 h-5 text-[#1AC2EA]" />
           </div>
-        ))}
+          <h3 className="text-sm font-medium">Total Users</h3>
+        </div>
+        <div className="flex justify-between items-center">
+          <span className="text-2xl font-bold">{totalUsers.toLocaleString()}</span>
+          <span className="px-2 py-1 rounded text-xs bg-green-50 text-green-600">
+            +16%
+          </span>
+        </div>
+      </div>
+      <div className="w-[344px] h-[118px] bg-white rounded-lg p-4 shadow-sm">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="bg-purple-50 p-2 rounded-full">
+            <ArrowUp className="w-5 h-5 text-[#1AC2EA]" />
+          </div>
+          <h3 className="text-sm font-medium">Total Sales</h3>
+        </div>
+        <div className="flex justify-between items-center">
+          <span className="text-2xl font-bold">{totalSales.toLocaleString()} FCFA</span>
+          <span className="px-2 py-1 rounded text-xs bg-green-50 text-[#1AC2EA]">
+            +16%
+          </span>
+        </div>
       </div>
     </div>
   );
 };
 
-export default Cards;
+export default Carts;
