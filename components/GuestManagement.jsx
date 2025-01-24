@@ -1,47 +1,75 @@
 "use client";
 import { useState, useEffect } from "react";
 import { MdSearch, MdFilterAlt } from "react-icons/md";
+import { Download } from "lucide-react";
 import axios from "axios";
 
 const GuestManagement = () => {
-  const [guests, setGuests] = useState([]);
+  const [participants, setParticipants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  const [totalGuests, setTotalGuests] = useState(0);
+  const [totalParticipants, setTotalParticipants] = useState(0);
   const [limit, setLimit] = useState(10);
-  const [behalf, setBehalf] = useState("all");
+  const [paymentMethod, setPaymentMethod] = useState("all");
+  const [message, setMessage] = useState(""); // Add this line
 
   // Fetch guests from API
-  const fetchGuests = async (page = 1, search = "", behalf = "all") => {
+  const fetchParticipants = async (
+    page = 1,
+    search = "",
+    paymentMethod = "all"
+  ) => {
     setLoading(true);
-    console.log("Request Params: ", { page, limit, search, behalf });
+    console.log("Request Params: ", { page, limit, search, paymentMethod });
 
     try {
       const response = await axios.get(
-        `https://anjeagwe2025-backend.onrender.com/api`,
+        `https://gomad-backend.onrender.com/api`,
         {
           params: {
             page,
             limit,
             search,
-            behalf,
+            paymentMethod,
           },
         }
       );
-      console.log("Response: ", response.data);
-      setGuests(response.data.guests);
-      setTotalGuests(response.data.totalGuests);
+      setParticipants(response.data.participants);
+      setTotalParticipants(response.data.totalParticipants);
     } catch (error) {
-      console.error("Error fetching guests:", error.message);
+      console.error("Error fetching Participants:", error.message);
     } finally {
       setLoading(false);
     }
   };
 
+  const handleExportData = async (format = "json") => {
+    try {
+      const response = await fetch(
+        `https://gomad-backend.onrender.com/api/export?format=${format}`
+      );
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `participants.${format}`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setMessage("Participant data exported successfully");
+      } else {
+        setMessage("Failed to export participant data");
+      }
+    } catch (error) {
+      setMessage("Failed to export participant data");
+    }
+  };
+
   useEffect(() => {
-    fetchGuests(currentPage, searchQuery, behalf);
-  }, [currentPage, searchQuery, behalf, limit]);
+    fetchParticipants(currentPage, searchQuery, paymentMethod);
+  }, [currentPage, searchQuery, paymentMethod, limit]);
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
@@ -53,7 +81,7 @@ const GuestManagement = () => {
   };
 
   const handleFilter = (e) => {
-    setBehalf(e.target.value);
+    setPaymentMethod(e.target.value);
     setCurrentPage(1);
   };
 
@@ -64,14 +92,14 @@ const GuestManagement = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Guest Management</h1>
+      <h1 className="text-2xl font-bold mb-4">Participants Management</h1>
       <div className="flex items-center justify-between mb-4">
         <div className="flex flex-row gap-2.5 border border-gray-300 rounded-lg px-4 py-3">
           <MdSearch size={24} />
           <input
             type="text"
             className="text-base font-light outline-none"
-            placeholder="Search guests..."
+            placeholder="Search Participants..."
             value={searchQuery}
             onChange={handleSearch}
           />
@@ -80,24 +108,50 @@ const GuestManagement = () => {
           <MdFilterAlt size={24} />
           <span className="ml-2">Filter</span>
           <select
-            value={behalf}
+            value={paymentMethod}
             onChange={handleFilter}
             className="ml-2 border-none outline-none bg-transparent"
           >
             <option value="all">All</option>
-            <option value="Groom">Groom</option>
-            <option value="Bride">Bride</option>
+            <option value="momo">MOMO</option>
+            <option value="om">OM</option>
           </select>
         </div>
+        <div className="flex items-center rounded-lg gap-2 px-4 py-3">
+          {/* Export Button */}
+          <button
+            onClick={() => handleExportData("json")}
+            className="bg-blue-400 px-4 py-4 flex hover:bg-blue-500 rounded-lg text-white font-bold "
+          >
+            {" "}
+            <Download />
+            Export JSON
+          </button>
+          <button
+            onClick={() => handleExportData("csv")}
+            className="bg-blue-400 px-4 py-4 flex hover:bg-blue-500 rounded-lg text-white font-bold "
+          >
+            {" "}
+            <Download />
+            Export CSV
+          </button>
+        </div>
       </div>
+      {/* Message Pop-up */}
+      {message && (
+        <div className="fixed bottom-4 right-4 bg-gray-800 text-white p-4 rounded-lg">
+          {message}
+          <button onClick={() => setMessage("")} className="ml-2 text-red-500">
+            X
+          </button>
+        </div>
+      )}
       <div className="overflow-x-auto">
         <table className="table-auto w-full border-collapse border border-gray-300">
           <thead>
             <tr className="bg-gray-200">
               <th className="border border-gray-300 p-2">Full Name</th>
               <th className="border border-gray-300 p-2">Phone Number</th>
-              <th className="border border-gray-300 p-2">Guest N°</th>
-              <th className="border border-gray-300 p-2">QR Code</th>
               <th className="border border-gray-300 p-2">Check In Status</th>
             </tr>
           </thead>
@@ -108,20 +162,23 @@ const GuestManagement = () => {
                   Loading...
                 </td>
               </tr>
-            ) : guests.length > 0 ? (
-              guests.map((guest) => (
-                <tr key={guest.id} className="hover:bg-gray-50">
-                  <td className="border border-gray-300 p-2">{guest.name}</td>
-                  <td className="border border-gray-300 p-2">{guest.phone}</td>
+            ) : participants.length > 0 ? (
+              participants.map((participant, index) => (
+                <tr
+                  key={participant.id || participant._id || index}
+                  className="hover:bg-gray-50"
+                >
                   <td className="border border-gray-300 p-2">
-                    {guest.numberOfGuests}
+                    {participant.name}
                   </td>
-                  <td className="border border-gray-300 p-2">{guest.id}</td>
+                  <td className="border border-gray-300 p-2">
+                    {participant.tel}
+                  </td>
                   <td className="border border-gray-300 p-2 text-center">
                     <input
                       type="checkbox"
                       readOnly
-                      checked={guest.checkedIn === true}
+                      checked={participant.checkedIn === true}
                       className="cursor-not-allowed"
                     />
                   </td>
@@ -130,7 +187,7 @@ const GuestManagement = () => {
             ) : (
               <tr>
                 <td colSpan="5" className="text-center p-4">
-                  No guests found.
+                  No Participants found.
                 </td>
               </tr>
             )}
@@ -153,11 +210,11 @@ const GuestManagement = () => {
           </select>
         </div>
         <span>
-          Showing {guests.length} of {totalGuests} records
+          Showing {participants.length} of {totalParticipants} records
         </span>
         <div className="flex space-x-2">
           {Array.from(
-            { length: Math.max(1, Math.ceil(totalGuests / limit)) },
+            { length: Math.max(1, Math.ceil(totalParticipants / limit)) },
             (_, index) => index + 1
           ).map((page) => (
             <button

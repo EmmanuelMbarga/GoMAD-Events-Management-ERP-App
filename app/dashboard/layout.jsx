@@ -3,12 +3,14 @@ import Navbar from "../../components/Navbar";
 
 export default function Layout({ children }) {
   return (
-    <main className="flex flex-row p-5 gap-2.5 h-screen w-full bg-white">
-      <Sidebar />
-      <div className="flex flex-col w-full gap-2.5">
+    <div className="flex h-screen w-full">
+      <Sidebar /> {/* Sidebar spans full height */}
+      <div className="flex flex-col flex-grow">
         <Navbar />
-        <div>{children}</div>
+        <main className="flex-grow overflow-auto p-4 bg-gray-100">
+          {children}
+        </main>
       </div>
-    </main>
+    </div>
   );
 }
