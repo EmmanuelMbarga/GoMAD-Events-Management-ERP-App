@@ -1,50 +1,51 @@
 "use client";
 import { useState, useEffect } from "react";
 import { MdSearch, MdFilterAlt } from "react-icons/md";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
+import { Download } from "lucide-react";
 
-const GuestManagement = () => {
-  const [participants, setParticipants] = useState([]);
+const GuestUser = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [organisers, setOrganisers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  const [totalParticipants, setTotalParticipants] = useState(0);
+  const [totalOrganisers, setTotalOrganisers] = useState(0);
   const [limit, setLimit] = useState(10);
-  const [paymentMethod, setPaymentMethod] = useState("all");
+  const [userType, setUserType] = useState("all");
 
-  // Fetch guests from API
-  const fetchParticipants = async (
-    page = 1,
-    search = "",
-    paymentMethod = "all"
-  ) => {
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  // Fetch Organisers from API
+  const fetchOrganisers = async (page = 1, search = "", userType = "all") => {
     setLoading(true);
-    console.log("Request Params: ", { page, limit, search, paymentMethod });
+    console.log("Request Params: ", { page, limit, search, userType });
 
     try {
-      const response = await axios.get(
-        `https://gomad-backend.onrender.com/api`,
-        {
-          params: {
-            page,
-            limit,
-            search,
-            paymentMethod,
-          },
-        }
-      );
-      setParticipants(response.data.participants);
-      setTotalParticipants(response.data.totalParticipants);
+      const response = await axios.get(`http://localhost:5003/organiser`, {
+        params: {
+          page,
+          limit,
+          search,
+          userType,
+        },
+      });
+      console.log("Response: ", response.data);
+      setOrganisers(response.data.organisers || []); // Fallback to empty array
+      setTotalOrganisers(response.data.totalOrganisers || 0); // Fallback to zero
     } catch (error) {
-      console.error("Error fetching Participants:", error.message);
+      console.error("Error fetching Organisers:", error.message);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchParticipants(currentPage, searchQuery, paymentMethod);
-  }, [currentPage, searchQuery, paymentMethod, limit]);
+    fetchOrganisers(currentPage, searchQuery, userType);
+  }, [currentPage, searchQuery, userType, limit]);
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
@@ -56,7 +57,7 @@ const GuestManagement = () => {
   };
 
   const handleFilter = (e) => {
-    setPaymentMethod(e.target.value);
+    setUserType(e.target.value);
     setCurrentPage(1);
   };
 
@@ -67,14 +68,13 @@ const GuestManagement = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Participants Management</h1>
       <div className="flex items-center justify-between mb-4">
         <div className="flex flex-row gap-2.5 border border-gray-300 rounded-lg px-4 py-3">
           <MdSearch size={24} />
           <input
             type="text"
             className="text-base font-light outline-none"
-            placeholder="Search Participants..."
+            placeholder="Search user..."
             value={searchQuery}
             onChange={handleSearch}
           />
@@ -83,14 +83,21 @@ const GuestManagement = () => {
           <MdFilterAlt size={24} />
           <span className="ml-2">Filter</span>
           <select
-            value={paymentMethod}
+            value={userType}
             onChange={handleFilter}
             className="ml-2 border-none outline-none bg-transparent"
           >
             <option value="all">All</option>
-            <option value="momo">MOMO</option>
-            <option value="om">OM</option>
+            <option value="admin">Admin</option>
+            <option value="staff">Staff</option>
           </select>
+        </div>
+        <div className="flex items-center rounded-lg px-4 py-3">
+          <button className="bg-blue-400 px-4 py-4 flex hover:bg-blue-500 rounded-lg text-white font-bold ">
+            {" "}
+            <Download />
+            Export
+          </button>
         </div>
       </div>
       <div className="overflow-x-auto">
@@ -98,8 +105,9 @@ const GuestManagement = () => {
           <thead>
             <tr className="bg-gray-200">
               <th className="border border-gray-300 p-2">Full Name</th>
-              <th className="border border-gray-300 p-2">Phone Number</th>
-              <th className="border border-gray-300 p-2">Check In Status</th>
+              <th className="border border-gray-300 p-2">Rule</th>
+              <th className="border border-gray-300 p-2">Password</th>
+              <th className="border border-gray-300 p-2">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -109,32 +117,49 @@ const GuestManagement = () => {
                   Loading...
                 </td>
               </tr>
-            ) : participants.length > 0 ? (
-              participants.map((participant, index) => (
+            ) : organisers.length > 0 ? (
+              organisers.map((organiser, index) => (
                 <tr
-                  key={participant.id || participant._id || index}
+                  key={organiser.id || organiser._id || index}
                   className="hover:bg-gray-50"
                 >
                   <td className="border border-gray-300 p-2">
-                    {participant.name}
+                    {organiser.name}
+                  </td>
+                  <td className="border border-gray-300 p-2 text-center ">
+                    <select name="" id="">
+                      <option value="admin">Admin</option>
+                      <option value="staff">Staff</option>
+                    </select>
                   </td>
                   <td className="border border-gray-300 p-2">
-                    {participant.tel}
+                    <div className="flex justify-between">
+                      <div
+                        className="div"
+                        type={showPassword ? "text" : "password"}
+                      >
+                        {showPassword ? "xxxx" : organiser.password}
+                      </div>
+                      <p
+                        role="button"
+                        className="my-1"
+                        onClick={() => togglePasswordVisibility(organiser.id)}
+                      >
+                        {showPassword ? <FaEye /> : <FaEyeSlash />}
+                      </p>
+                    </div>
                   </td>
-                  <td className="border border-gray-300 p-2 text-center">
-                    <input
-                      type="checkbox"
-                      readOnly
-                      checked={participant.checkedIn === true}
-                      className="cursor-not-allowed"
-                    />
+                  <td className="border border-gray-300 text-center p-2">
+                    <button className="bg-blue-400 px-2 rounded-lg py-2 text-white font-bold">
+                      Delete
+                    </button>{" "}
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
                 <td colSpan="5" className="text-center p-4">
-                  No Participants found.
+                  No Organisers found.
                 </td>
               </tr>
             )}
@@ -157,11 +182,11 @@ const GuestManagement = () => {
           </select>
         </div>
         <span>
-          Showing {participants.length} of {totalParticipants} records
+          Showing {organisers.length} of {totalOrganisers} records
         </span>
         <div className="flex space-x-2">
           {Array.from(
-            { length: Math.max(1, Math.ceil(totalParticipants / limit)) },
+            { length: Math.max(1, Math.ceil(totalOrganisers / limit)) },
             (_, index) => index + 1
           ).map((page) => (
             <button
@@ -182,4 +207,4 @@ const GuestManagement = () => {
   );
 };
 
-export default GuestManagement;
+export default GuestUser;
