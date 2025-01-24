@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { MdSearch, MdFilterAlt } from "react-icons/md";
+import { Download } from "lucide-react";
 import axios from "axios";
 
 const GuestManagement = () => {
@@ -11,6 +12,7 @@ const GuestManagement = () => {
   const [totalParticipants, setTotalParticipants] = useState(0);
   const [limit, setLimit] = useState(10);
   const [paymentMethod, setPaymentMethod] = useState("all");
+  const [message, setMessage] = useState(""); // Add this line
 
   // Fetch guests from API
   const fetchParticipants = async (
@@ -39,6 +41,29 @@ const GuestManagement = () => {
       console.error("Error fetching Participants:", error.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleExportData = async (format = "json") => {
+    try {
+      const response = await fetch(
+        `http://localhost:5003/api/export?format=${format}`
+      );
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `participants.${format}`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setMessage("Participant data exported successfully");
+      } else {
+        setMessage("Failed to export participant data");
+      }
+    } catch (error) {
+      setMessage("Failed to export participant data");
     }
   };
 
@@ -92,7 +117,35 @@ const GuestManagement = () => {
             <option value="om">OM</option>
           </select>
         </div>
+        <div className="flex items-center rounded-lg gap-2 px-4 py-3">
+          {/* Export Button */}
+          <button
+            onClick={() => handleExportData("json")}
+            className="bg-blue-400 px-4 py-4 flex hover:bg-blue-500 rounded-lg text-white font-bold "
+          >
+            {" "}
+            <Download />
+            Export JSON
+          </button>
+          <button
+            onClick={() => handleExportData("csv")}
+            className="bg-blue-400 px-4 py-4 flex hover:bg-blue-500 rounded-lg text-white font-bold "
+          >
+            {" "}
+            <Download />
+            Export CSV
+          </button>
+        </div>
       </div>
+      {/* Message Pop-up */}
+      {message && (
+        <div className="fixed bottom-4 right-4 bg-gray-800 text-white p-4 rounded-lg">
+          {message}
+          <button onClick={() => setMessage("")} className="ml-2 text-red-500">
+            X
+          </button>
+        </div>
+      )}
       <div className="overflow-x-auto">
         <table className="table-auto w-full border-collapse border border-gray-300">
           <thead>

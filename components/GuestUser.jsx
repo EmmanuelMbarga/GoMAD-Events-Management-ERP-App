@@ -4,6 +4,10 @@ import { MdSearch, MdFilterAlt } from "react-icons/md";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import { Download } from "lucide-react";
+import Modal from "react-modal"; // Add this import
+
+// Set the app element for accessibility
+Modal.setAppElement("#__next"); // Updated selector for Next.js applications
 
 const GuestUser = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -14,9 +18,112 @@ const GuestUser = () => {
   const [totalOrganisers, setTotalOrganisers] = useState(0);
   const [limit, setLimit] = useState(10);
   const [userType, setUserType] = useState("all");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newUser, setNewUser] = useState({
+    name: "",
+    password: "",
+    role: "staff",
+  });
+  const [message, setMessage] = useState("");
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewUser({ ...newUser, [name]: value });
+  };
+
+  const handleAddUser = async () => {
+    try {
+      const response = await fetch("http://localhost:5003/organiser", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: newUser.name,
+          password: newUser.password,
+          userType: newUser.role,
+        }),
+      });
+      if (response.status === 201) {
+        setMessage("Organiser created successfully");
+        fetchOrganisers(currentPage, searchQuery, userType); // Refresh the list
+      } else {
+        setMessage("Failed to create organiser");
+      }
+    } catch (error) {
+      setMessage("Failed to create organiser");
+    } finally {
+      toggleModal();
+    }
+  };
+
+  const handleDeleteUser = async (name) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5003/organiser/name/${name}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (response.status === 200) {
+        setMessage("Organiser deleted successfully");
+        fetchOrganisers(currentPage, searchQuery, userType); // Refresh the list
+      } else {
+        setMessage("Failed to delete organiser");
+      }
+    } catch (error) {
+      setMessage("Failed to delete organiser");
+    }
+  };
+
+  const handleUpdateUserRole = async (name, newRole) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5003/organiser/name/${name}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userType: newRole }),
+        }
+      );
+      if (response.status === 200) {
+        setMessage("Organiser updated successfully");
+        fetchOrganisers(currentPage, searchQuery, userType); // Refresh the list
+      } else {
+        setMessage("Failed to update organiser");
+      }
+    } catch (error) {
+      setMessage("Failed to update organiser");
+    }
+  };
+
+  const handleExportData = async (format = "json") => {
+    try {
+      const response = await fetch(
+        `http://localhost:5003/organiser/export?format=${format}`
+      );
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `organisers.${format}`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setMessage("Organiser data exported successfully");
+      } else {
+        setMessage("Failed to export organiser data");
+      }
+    } catch (error) {
+      setMessage("Failed to export organiser data");
+    }
   };
 
   // Fetch Organisers from API
@@ -70,7 +177,71 @@ const GuestUser = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6" id="__next">
+      {/* Modal for Adding User */}
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={toggleModal}
+        contentLabel="Add User Modal"
+        className="modal-overlay flex justify-center items-center"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+      >
+        <div className="modal-content bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+          <h2 className="text-2xl font-bold mb-4 text-center">Add New User</h2>
+          <form>
+            <input
+              type="text"
+              name="name"
+              placeholder="Name"
+              value={newUser.name}
+              onChange={handleInputChange}
+              className="border p-2 mb-4 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={newUser.password}
+              onChange={handleInputChange}
+              className="border p-2 mb-4 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <select
+              name="role"
+              value={newUser.role}
+              onChange={handleInputChange}
+              className="border p-2 mb-4 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="admin">Admin</option>
+              <option value="staff">Staff</option>
+            </select>
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={handleAddUser}
+                className="bg-blue-500 px-4 py-2 rounded-lg text-white font-bold mr-2 hover:bg-blue-600"
+              >
+                Add
+              </button>
+              <button
+                type="button"
+                onClick={toggleModal}
+                className="bg-red-500 px-4 py-2 rounded-lg text-white font-bold hover:bg-red-600"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </Modal>
+      {/* Message Pop-up */}
+      {message && (
+        <div className="fixed bottom-4 right-4 bg-gray-800 text-white p-4 rounded-lg">
+          {message}
+          <button onClick={() => setMessage("")} className="ml-2 text-red-500">
+            X
+          </button>
+        </div>
+      )}
       <div className="flex items-center justify-between mb-4">
         <div className="flex flex-row gap-2.5 border border-gray-300 rounded-lg px-4 py-3">
           <MdSearch size={24} />
@@ -95,11 +266,32 @@ const GuestUser = () => {
             <option value="staff">Staff</option>
           </select>
         </div>
-        <div className="flex items-center rounded-lg px-4 py-3">
-          <button className="bg-blue-400 px-4 py-4 flex hover:bg-blue-500 rounded-lg text-white font-bold ">
+        <div className="flex items-center rounded-lg gap-2 px-4 py-3">
+          {/* Add User Button */}
+          <button
+            onClick={toggleModal}
+            className="bg-blue-400 hover:bg-blue-500 px-4 py-4 rounded-lg text-white font-bold"
+          >
+            Add User
+          </button>
+        </div>
+        <div className="flex items-center rounded-lg gap-2 px-4 py-3">
+          {/* Export Button */}
+          <button
+            onClick={() => handleExportData("json")}
+            className="bg-blue-400 px-4 py-4 flex hover:bg-blue-500 rounded-lg text-white font-bold "
+          >
             {" "}
             <Download />
-            Export
+            Export JSON
+          </button>
+          <button
+            onClick={() => handleExportData("csv")}
+            className="bg-blue-400 px-4 py-4 flex hover:bg-blue-500 rounded-lg text-white font-bold "
+          >
+            {" "}
+            <Download />
+            Export CSV
           </button>
         </div>
       </div>
@@ -130,7 +322,13 @@ const GuestUser = () => {
                     {organiser.name}
                   </td>
                   <td className="border border-gray-300 p-2 text-center ">
-                    <select name="" id="">
+                    <select
+                      value={organiser.userType}
+                      onChange={(e) =>
+                        handleUpdateUserRole(organiser.name, e.target.value)
+                      }
+                      className="border-none outline-none bg-transparent"
+                    >
                       <option value="admin">Admin</option>
                       <option value="staff">Staff</option>
                     </select>
@@ -153,7 +351,10 @@ const GuestUser = () => {
                     </div>
                   </td>
                   <td className="border border-gray-300 text-center p-2">
-                    <button className="bg-blue-400 px-2 rounded-lg py-2 text-white font-bold">
+                    <button
+                      onClick={() => handleDeleteUser(organiser.name)}
+                      className="bg-blue-400 px-2 rounded-lg py-2 text-white font-bold"
+                    >
                       Delete
                     </button>{" "}
                   </td>
@@ -211,3 +412,23 @@ const GuestUser = () => {
 };
 
 export default GuestUser;
+
+// Add the following CSS to your global stylesheet or in a <style> tag in your component
+/*
+.modal {
+  overlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+  },
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    padding: '20px',
+    borderRadius: '10px',
+    width: '400px',
+  },
+}
+*/

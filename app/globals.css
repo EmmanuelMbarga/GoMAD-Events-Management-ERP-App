@@ -26,3 +26,9 @@ th, td {
   @apply border p-2;
 }
 
+/* Modal Overlay */
+.modal-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
