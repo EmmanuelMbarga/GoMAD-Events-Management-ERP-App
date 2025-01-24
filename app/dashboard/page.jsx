@@ -4,8 +4,9 @@ import Calendar from "../../components/Calender";
 import Cards from "../../components/Card";
 import GuestManagement from "../../components/GuestManagement";
 import ChartWrapper from "../../components/ChartWrapper";
+import DashboardLayout from "../../components/DashboardLayout";
 
-export default function Dashboard() {
+function Dashboard() {
   return (
     <div className="flex flex-col w-full justify-between">
       <div className="flex flex-row justify-between">
@@ -19,5 +20,13 @@ export default function Dashboard() {
       </div>
       <GuestManagement />
     </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <DashboardLayout>
+      <Dashboard />
+    </DashboardLayout>
   );
 }

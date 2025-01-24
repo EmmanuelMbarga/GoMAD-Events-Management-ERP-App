@@ -1,14 +1,19 @@
-import Sidebar from "../components/Sidebar";
+import DashboardLayout from "../components/DashboardLayout";
+import { useRouter } from "next/router";
 
 function MyApp({ Component, pageProps }) {
-  return (
-    <div className="flex h-screen">
-      <Sidebar />
-      <main className="flex-grow overflow-y-auto">
+  const router = useRouter();
+  const isDashboardPage = router.pathname.startsWith("/dashboard");
+
+  if (isDashboardPage) {
+    return (
+      <DashboardLayout>
         <Component {...pageProps} />
-      </main>
-    </div>
-  );
+      </DashboardLayout>
+    );
+  }
+
+  return <Component {...pageProps} />;
 }
 
 export default MyApp;

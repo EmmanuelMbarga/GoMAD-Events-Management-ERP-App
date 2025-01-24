@@ -1,4 +1,5 @@
 "use client";
+import withAuth from "../utils/withAuth";
 import { useState, useEffect } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { FaCheck, FaTimes } from "react-icons/fa";
@@ -67,7 +68,7 @@ const QRResult = ({ result, retry, closeModal }) => {
   );
 };
 
-export default function Scanner() {
+function Scanner() {
   const [qrCode, setQrCode] = useState("");
   const [result, setResult] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -157,3 +158,5 @@ export default function Scanner() {
     </div>
   );
 }
+
+export default withAuth(Scanner);
