@@ -80,7 +80,7 @@ export default function PaymentPage() {
             name: form.name,
             tel: form.phone,
             type: form.method,
-            amount: 10,
+            amount: 15000,
           }),
         }
       );
@@ -174,7 +174,7 @@ export default function PaymentPage() {
           GoMAD Event Payment
         </h1>
         <div className="mt-2 bg-[#00BFFF] text-white px-4 py-2 rounded-full inline-block">
-          Amount: 10,000 FCFA
+          Amount: 15,000 FCFA
         </div>
       </motion.header>
 
