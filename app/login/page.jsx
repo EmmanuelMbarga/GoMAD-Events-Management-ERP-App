@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"; // Update this import
 import Modal from "react-modal"; // Add this import
 
 // Set the app element for accessibility
-Modal.setAppElement("body");
+Modal.setAppElement("#__next");
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);

@@ -25,6 +25,7 @@ export default function RootLayout({ children }) {
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body
+        id="__next"
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white`}
       >
         <AuthProvider>{children}</AuthProvider>
