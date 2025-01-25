@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 
-const BarCharts = dynamic(() => import("./Barchart"), {
+const BarCharts = dynamic(() => import("./Piechart"), {
   ssr: false,
   loading: () => <div>Loading chart...</div>,
 });
