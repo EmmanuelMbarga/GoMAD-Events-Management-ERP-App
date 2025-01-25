@@ -180,7 +180,7 @@ const GuestUser = () => {
   };
 
   return (
-    <div className="p-2 sm:p-6" id="__next">
+    <div className="p-2 sm:p-6">
       {/* Modal for Adding User */}
       <Modal
         isOpen={isModalOpen}

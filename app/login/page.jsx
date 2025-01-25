@@ -65,10 +65,7 @@ export default function Login() {
   };
 
   return (
-    <div
-      className="flex flex-col justify-center items-center h-screen "
-      id="__next"
-    >
+    <div className="flex flex-col justify-center items-center h-screen ">
       <div className="flex flex-col w-full h-full n items-center">
         <h1 className="flex font-bold mt-[114px] text-3xl text-[#1E232C] w-[280px] h-[78px]">
           Welcome back! Glad to see you!
