@@ -1,9 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 //import Link from "next/link";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { useRouter } from "next/navigation"; // Update this import
 import Modal from "react-modal"; // Add this import
+import { useAuth } from "../../context/AuthContext";
 
 // Set the app element for accessibility
 Modal.setAppElement("#__next");
@@ -17,51 +18,119 @@ export default function Login() {
   const [isModalOpen, setIsModalOpen] = useState(false); // Add this line
   const [isLoggingIn, setIsLoggingIn] = useState(false); // Add this line
   const router = useRouter(); // Update this line
+  const { login, user } = useAuth();
+
+  useEffect(() => {
+    // Only redirect if user exists and no pending destination selection
+    if (user && !sessionStorage.getItem("pendingLoginData")) {
+      const destination =
+        user.selectedDestination ||
+        (user.userType === "admin" ? "/dashboard" : "/scanner");
+      router.replace(destination);
+    }
+  }, [user, router]);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
   const handleLogin = async () => {
-    setIsLoggingIn(true); // Set loading state to true when starting login
+    // Validate inputs before making API call
+    if (!name.trim() || !password.trim()) {
+      setError("Please fill in all fields");
+      return;
+    }
+
+    setIsLoggingIn(true);
+    setError("");
+
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
       const response = await fetch(
         "https://gomad-backend.onrender.com/organiser/login",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, password }),
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache",
+          },
+          body: JSON.stringify({ name: name.trim(), password }),
+          signal: controller.signal,
         }
       );
+
+      clearTimeout(timeoutId);
 
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("userType", data.organiser.userType); // Store the user type
-
+        // For admin users, show modal first before completing login
         if (data.organiser.userType === "admin") {
-          // Allow admin to choose between dashboard and scanner
-          setError("");
           setUserType("admin");
-          setIsModalOpen(true); // Open the modal
-        } else if (data.organiser.userType === "staff") {
-          router.push("/scanner");
+          setIsModalOpen(true);
+          // Store login data temporarily
+          sessionStorage.setItem(
+            "pendingLoginData",
+            JSON.stringify({
+              userType: data.organiser.userType,
+              token: data.token,
+              name: data.organiser.name,
+            })
+          );
         } else {
-          setError("Unauthorized access");
+          // For non-admin users, login and redirect immediately
+          login({
+            userType: data.organiser.userType,
+            token: data.token,
+            name: data.organiser.name,
+          });
+          router.push("/scanner");
         }
       } else {
-        setError(data.error);
+        throw new Error(data.error || "Invalid credentials");
       }
     } catch (error) {
-      setError("Failed to login");
+      setError(
+        error.message === "Failed to fetch"
+          ? "Network error. Please check your connection."
+          : error.message
+      );
     } finally {
-      setIsLoggingIn(false); // Reset loading state regardless of outcome
+      setIsLoggingIn(false);
     }
   };
 
-  const handleAdminLogin = (destination) => {
-    setIsModalOpen(false); // Close the modal
-    router.push(destination);
+  // Add keyboard event listener for Enter key
+  useEffect(() => {
+    const handleEnter = (e) => {
+      if (e.key === "Enter" && !isLoggingIn) {
+        handleLogin();
+      }
+    };
+    document.addEventListener("keydown", handleEnter);
+    return () => document.removeEventListener("keydown", handleEnter);
+  }, [name, password, isLoggingIn]);
+
+  const handleAdminLogin = async (destination) => {
+    try {
+      const pendingLoginData = JSON.parse(
+        sessionStorage.getItem("pendingLoginData")
+      );
+      if (pendingLoginData) {
+        await login({
+          ...pendingLoginData,
+          selectedDestination: destination,
+        });
+        sessionStorage.removeItem("pendingLoginData");
+        setIsModalOpen(false);
+        router.replace(destination);
+      }
+    } catch (error) {
+      console.error("Error during admin login:", error);
+      setError("Failed to complete login. Please try again.");
+    }
   };
 
   return (

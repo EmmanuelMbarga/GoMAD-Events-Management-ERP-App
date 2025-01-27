@@ -5,9 +5,7 @@ import Image from "next/image";
 import { Dialog } from "@headlessui/react";
 import { motion } from "framer-motion";
 import { Loader2, CheckCircle, AlertCircle } from "lucide-react";
-import { PDFDownloadLink } from "@react-pdf/renderer";
 import QRCode from "qrcode";
-import TicketTemplate from "./TicketTemplate";
 import { useRouter } from "next/navigation";
 
 export default function PaymentPage() {
@@ -22,6 +20,7 @@ export default function PaymentPage() {
     ticketUrl: "",
   });
   const [ticketData, setTicketData] = useState(null);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const router = useRouter();
 
   const validateFormStep = (currentStep) => {
@@ -56,7 +55,7 @@ export default function PaymentPage() {
     }
   };
 
-  const generateQRCode = async (data) => {
+  /*const generateQRCode = async (data) => {
     try {
       const qrCodeDataURL = await QRCode.toDataURL(JSON.stringify(data));
       return qrCodeDataURL;
@@ -64,7 +63,7 @@ export default function PaymentPage() {
       console.error("QR Code generation error:", err);
       return null;
     }
-  };
+  };*/
 
   const handlePayment = async () => {
     if (!validateFormStep(2)) return;
@@ -80,7 +79,7 @@ export default function PaymentPage() {
             name: form.name,
             tel: form.phone,
             type: form.method,
-            amount: 15000,
+            amount: 10,
           }),
         }
       );
@@ -88,16 +87,10 @@ export default function PaymentPage() {
       const data = await response.json();
 
       if (response.ok) {
-        const qrCode = await generateQRCode({
-          name: form.name,
-          phone: form.phone,
-          paymentId: data.paymentId,
-        });
-
         setTicketData({
           name: form.name,
           phone: form.phone,
-          qrCode,
+          qrCode: data.participantData.qrCode,
         });
 
         setDialogData({
@@ -107,7 +100,7 @@ export default function PaymentPage() {
       } else {
         setDialogData({
           success: false,
-          message: `Payment failed: ${data.message}`,
+          message: `Payment failed: `,
         });
       }
 
@@ -123,15 +116,50 @@ export default function PaymentPage() {
     }
   };
 
-  const TicketDownloadButton = () => (
-    <PDFDownloadLink
-      document={<TicketTemplate {...ticketData} />}
-      fileName="gomad-event-ticket.pdf"
-      className="w-full bg-[#00AAE8] text-white text-center px-4 py-2 rounded-lg hover:bg-[#00BFFF] transition-colors duration-200"
-    >
-      {({ loading }) => (loading ? "Generating ticket..." : "Download Ticket")}
-    </PDFDownloadLink>
-  );
+  const handleTicketDownload = async () => {
+    setIsGeneratingPDF(true);
+    try {
+      console.log("Sending request with data:", {
+        name: ticketData.name,
+        qrcode: ticketData.qrCode,
+      });
+
+      const response = await fetch("/api/generate-pdf", {
+        // Remove /route from the path
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/pdf",
+        },
+        body: JSON.stringify({
+          name: ticketData.name,
+          qrcode: ticketData.qrCode,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! status: ${response.status}, message: ${errorText}`
+        );
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "gomad-ticket.pdf";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading ticket:", error);
+      alert(`Failed to download ticket: ${error.message}`);
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center p-4 md:p-8">
@@ -341,7 +369,17 @@ export default function PaymentPage() {
                 {dialogData.message}
               </Dialog.Description>
               <div className="mt-6 flex flex-col gap-3">
-                {dialogData.success && ticketData && <TicketDownloadButton />}
+                {dialogData.success && ticketData && (
+                  <button
+                    onClick={handleTicketDownload}
+                    disabled={isGeneratingPDF}
+                    className="w-full bg-[#00AAE8] text-white text-center px-4 py-2 rounded-lg hover:bg-[#00BFFF] transition-colors duration-200"
+                  >
+                    {isGeneratingPDF
+                      ? "Generating ticket..."
+                      : "Download Ticket"}
+                  </button>
+                )}
                 <button
                   onClick={() => setIsDialogOpen(false)}
                   className="w-full bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors duration-200"

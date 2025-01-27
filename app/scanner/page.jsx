@@ -5,6 +5,7 @@ import { Html5QrcodeScanner } from "html5-qrcode";
 import { FaCheck, FaTimes } from "react-icons/fa";
 import { LogOut } from "lucide-react"; // Add this import
 import Link from "next/link";
+import { useAuth } from "../../context/AuthContext";
 
 const SuccessComponent = ({ closeModal }) => {
   return (
@@ -69,6 +70,7 @@ const QRResult = ({ result, retry, closeModal }) => {
 };
 
 function Scanner() {
+  const { logout } = useAuth();
   const [qrCode, setQrCode] = useState("");
   const [result, setResult] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -128,11 +130,12 @@ function Scanner() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white p-4">
-      <Link href={`/login`}>
-        <div className="absolute flex rounded-full border-2 border-blue-500 top-4 right-4">
-          <LogOut className="w-10 h-10 p-2 text-blue-500" />{" "}
-        </div>
-      </Link>
+      <button
+        onClick={logout}
+        className="absolute flex rounded-full border-2 border-blue-500 top-4 right-4"
+      >
+        <LogOut className="w-10 h-10 p-2 text-blue-500" />
+      </button>
 
       <div className="text-center">
         <h1 className="text-lg font-medium text-gray-700">Welcome to</h1>

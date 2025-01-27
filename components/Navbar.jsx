@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { MdNotifications, MdMenu } from "react-icons/md";
+import { useAuth } from "../context/AuthContext";
 
 export default function Navbar({ toggleSidebar }) {
+  const { logout } = useAuth();
+
   return (
     <div className="flex justify-between items-center bg-white shadow-md p-4">
       {/* Mobile Menu Button */}
@@ -26,19 +29,16 @@ export default function Navbar({ toggleSidebar }) {
           <MdNotifications size={24} />
         </button>
 
-        <div className="flex items-center border rounded p-1 space-x-2">
-          <Link href="/login">
-            <img
-              src="/logo.png"
-              alt="Profile"
-              className="w-8 h-8 rounded-full"
-            />
-          </Link>
+        <button
+          onClick={logout}
+          className="flex items-center border rounded p-1 space-x-2 hover:bg-gray-100"
+        >
+          <img src="/logo.png" alt="logout" className="w-8 h-8 rounded-full" />
           <div className="hidden sm:block">
             <h2 className="text-sm font-bold">GoMAD</h2>
-            <p className="text-xs text-gray-500">Manager</p>
+            <p className="text-xs text-gray-500">Logout</p>
           </div>
-        </div>
+        </button>
       </div>
     </div>
   );
