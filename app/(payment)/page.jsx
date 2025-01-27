@@ -87,7 +87,7 @@ export default function PaymentPage() {
       const data = await response.json();
       console.log("Payment response:", data); // Add logging
 
-      if (response.ok && data.participantData?.qrCode) {
+      if (response.ok) {
         setTicketData({
           name: form.name,
           phone: form.phone,
