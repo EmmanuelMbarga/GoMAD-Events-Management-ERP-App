@@ -8,6 +8,20 @@ import { Loader2, CheckCircle, AlertCircle } from "lucide-react";
 //import QRCode from "qrcode";
 import { useRouter } from "next/navigation";
 
+const fetchWithRetry = async (url, options, maxRetries = 3) => {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const response = await fetch(url, options);
+      return response;
+    } catch (error) {
+      if (attempt === maxRetries) throw error;
+      // Wait for 1 second before retrying
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      console.log(`Retrying... Attempt ${attempt + 1} of ${maxRetries}`);
+    }
+  }
+};
+
 export default function PaymentPage() {
   const [form, setForm] = useState({ name: "", phone: "", method: "" });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -70,11 +84,13 @@ export default function PaymentPage() {
 
     setIsLoading(true);
     try {
-      const response = await fetch(
+      const response = await fetchWithRetry(
         "https://gomad-backend.onrender.com/api/register-and-pay",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({
             name: form.name,
             tel: form.phone,
@@ -84,10 +100,14 @@ export default function PaymentPage() {
         }
       );
 
-      const data = await response.json();
-      console.log("Payment response:", data); // Add logging
+      if (!response) {
+        throw new Error("Network error - Unable to connect to the server");
+      }
 
-      if (response.ok) {
+      const data = await response.json();
+      console.log("Payment response:", data);
+
+      if (response.ok && data.participantData?.qrCode) {
         setTicketData({
           name: form.name,
           phone: form.phone,
@@ -99,18 +119,20 @@ export default function PaymentPage() {
           message: "Payment successful! Download your ticket.",
         });
       } else {
-        throw new Error(data.message || "Payment failed");
+        throw new Error(data.message || "Payment processing failed");
       }
     } catch (error) {
       console.error("Payment error:", error);
       setDialogData({
         success: false,
         message:
-          error.message || "An unexpected error occurred during payment.",
+          error.message === "Failed to fetch"
+            ? "Unable to connect to the payment server. Please check your internet connection and try again."
+            : error.message || "An unexpected error occurred during payment.",
       });
     } finally {
       setIsLoading(false);
-      setIsDialogOpen(true); // Always show dialog regardless of success/failure
+      setIsDialogOpen(true);
     }
   };
 
