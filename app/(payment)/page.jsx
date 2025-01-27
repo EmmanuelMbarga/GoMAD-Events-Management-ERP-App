@@ -5,22 +5,7 @@ import Image from "next/image";
 import { Dialog } from "@headlessui/react";
 import { motion } from "framer-motion";
 import { Loader2, CheckCircle, AlertCircle } from "lucide-react";
-//import QRCode from "qrcode";
 import { useRouter } from "next/navigation";
-
-const fetchWithRetry = async (url, options, maxRetries = 3) => {
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      const response = await fetch(url, options);
-      return response;
-    } catch (error) {
-      if (attempt === maxRetries) throw error;
-      // Wait for 1 second before retrying
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log(`Retrying... Attempt ${attempt + 1} of ${maxRetries}`);
-    }
-  }
-};
 
 export default function PaymentPage() {
   const [form, setForm] = useState({ name: "", phone: "", method: "" });
@@ -69,28 +54,16 @@ export default function PaymentPage() {
     }
   };
 
-  /*const generateQRCode = async (data) => {
-    try {
-      const qrCodeDataURL = await QRCode.toDataURL(JSON.stringify(data));
-      return qrCodeDataURL;
-    } catch (err) {
-      console.error("QR Code generation error:", err);
-      return null;
-    }
-  };*/
-
   const handlePayment = async () => {
     if (!validateFormStep(2)) return;
 
     setIsLoading(true);
     try {
-      const response = await fetchWithRetry(
+      const response = await fetch(
         "https://gomad-backend.onrender.com/api/register-and-pay",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             name: form.name,
             tel: form.phone,
@@ -100,14 +73,9 @@ export default function PaymentPage() {
         }
       );
 
-      if (!response) {
-        throw new Error("Network error - Unable to connect to the server");
-      }
-
       const data = await response.json();
-      console.log("Payment response:", data);
 
-      if (response.ok && data.participantData?.qrCode) {
+      if (response.ok) {
         setTicketData({
           name: form.name,
           phone: form.phone,
@@ -119,20 +87,21 @@ export default function PaymentPage() {
           message: "Payment successful! Download your ticket.",
         });
       } else {
-        throw new Error(data.message || "Payment processing failed");
+        setDialogData({
+          success: false,
+          message: `Payment failed: ${data.message}`,
+        });
       }
+
+      setIsDialogOpen(true);
     } catch (error) {
-      console.error("Payment error:", error);
       setDialogData({
         success: false,
-        message:
-          error.message === "Failed to fetch"
-            ? "Unable to connect to the payment server. Please check your internet connection and try again."
-            : error.message || "An unexpected error occurred during payment.",
+        message: "An unexpected error occurred.",
       });
+      setIsDialogOpen(true);
     } finally {
       setIsLoading(false);
-      setIsDialogOpen(true);
     }
   };
 
@@ -145,6 +114,7 @@ export default function PaymentPage() {
       });
 
       const response = await fetch("/api/generate-pdf", {
+        // Remove /route from the path
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -215,7 +185,9 @@ export default function PaymentPage() {
           alt="Company Logo"
           width={120}
           height={120}
+          style={{ height: "auto", width: "auto" }}
           className="mx-auto drop-shadow-md"
+          priority // Add priority property
         />
         <h1 className="text-3xl font-bold mt-4 text-[#0033CC]">
           GoMAD Event Payment
@@ -304,7 +276,7 @@ export default function PaymentPage() {
                         }
                         width={48}
                         height={48}
-                        className="mb-2"
+                        className="mb-2 h-12 w-auto object-contain"
                       />
                       <input
                         type="radio"
