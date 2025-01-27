@@ -85,8 +85,9 @@ export default function PaymentPage() {
       );
 
       const data = await response.json();
+      console.log("Payment response:", data); // Add logging
 
-      if (response.ok) {
+      if (response.ok && data.participantData?.qrCode) {
         setTicketData({
           name: form.name,
           phone: form.phone,
@@ -98,21 +99,18 @@ export default function PaymentPage() {
           message: "Payment successful! Download your ticket.",
         });
       } else {
-        setDialogData({
-          success: false,
-          message: `Payment failed: `,
-        });
+        throw new Error(data.message || "Payment failed");
       }
-
-      setIsDialogOpen(true);
     } catch (error) {
+      console.error("Payment error:", error);
       setDialogData({
         success: false,
-        message: "An unexpected error occurred.",
+        message:
+          error.message || "An unexpected error occurred during payment.",
       });
-      setIsDialogOpen(true);
     } finally {
       setIsLoading(false);
+      setIsDialogOpen(true); // Always show dialog regardless of success/failure
     }
   };
 
@@ -125,7 +123,6 @@ export default function PaymentPage() {
       });
 
       const response = await fetch("/api/generate-pdf", {
-        // Remove /route from the path
         method: "POST",
         headers: {
           "Content-Type": "application/json",
