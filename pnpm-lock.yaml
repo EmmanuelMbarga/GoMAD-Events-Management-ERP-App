@@ -14,6 +14,9 @@ importers:
       '@react-pdf/renderer':
         specifier: ^4.1.6
         version: 4.1.6(react@19.0.0)
+      '@sparticuz/chromium':
+        specifier: ^132.0.0
+        version: 132.0.0
       axios:
         specifier: ^1.7.9
         version: 1.7.9
@@ -990,6 +993,10 @@ packages:
 
   '@rushstack/eslint-patch@1.10.5':
     resolution: {integrity: sha512-kkKUDVlII2DQiKy7UstOR1ErJP8kUKAQ4oa+SQtM0K+lPdmmjj0YnnxBgtTVYH7mUKtbsxeFC9y0AmK7Yb78/A==}
+
+  '@sparticuz/chromium@132.0.0':
+    resolution: {integrity: sha512-7SAhVa4nHAP7bxEhnMFuwV7KNDqAF4RVGZNwRhvyss8lJNT7Syi9nPwIPYvsHtjJ1S7Nx8OL8uqe9V3a/ED/Mg==}
+    engines: {node: '>= 16'}
 
   '@surma/rollup-plugin-off-main-thread@2.2.3':
     resolution: {integrity: sha512-lR8q/9W7hZpMWweNiAKU7NQerBnzQQLvi8qnTDU/fxItPhtZVMbPV3lbCwjhIlNBe9Bbr5V+KHshvWmVSG9cxQ==}
@@ -4801,6 +4808,14 @@ snapshots:
   '@rtsao/scc@1.1.0': {}
 
   '@rushstack/eslint-patch@1.10.5': {}
+
+  '@sparticuz/chromium@132.0.0':
+    dependencies:
+      follow-redirects: 1.15.9
+      tar-fs: 3.0.8
+    transitivePeerDependencies:
+      - bare-buffer
+      - debug
 
   '@surma/rollup-plugin-off-main-thread@2.2.3':
     dependencies:
