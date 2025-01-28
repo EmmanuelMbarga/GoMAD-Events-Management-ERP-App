@@ -12,6 +12,11 @@ const nextConfig = {
       config.externals.push("puppeteer-core"); // Externalize puppeteer-core
       config.externals.push("chrome-aws-lambda"); // Externalize chrome-aws-lambda
     }
+    // Add file loader for binary files
+    config.module.rules.push({
+      test: /\.node$/,
+      use: "node-loader",
+    });
     return config;
   },
 };

@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
-import puppeteer from "puppeteer";
+import chromium from "chrome-aws-lambda";
+import puppeteer from "puppeteer-core";
+
+const isDev = process.env.NODE_ENV === "development";
 
 export async function POST(request) {
   console.log("PDF generation started");
@@ -14,18 +17,26 @@ export async function POST(request) {
       );
     }
 
-    // Updated browser launch configuration
-    const browser = await puppeteer.launch({
-      headless: "new",
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-        "--disable-gpu",
-      ],
-      executablePath: process.env.CHROME_PATH || undefined, // Will use installed Chrome
-      ignoreHTTPSErrors: true,
-    });
+    // Different browser launch configs for dev and prod
+    const options = isDev
+      ? {
+          args: [],
+          executablePath:
+            process.platform === "win32"
+              ? "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+              : process.platform === "linux"
+              ? "/usr/bin/google-chrome"
+              : "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+          headless: true,
+        }
+      : {
+          args: chromium.args,
+          executablePath: await chromium.executablePath,
+          headless: chromium.headless,
+        };
+
+    console.log("Browser launch options:", options);
+    const browser = await puppeteer.launch(options);
 
     console.log("Browser launched");
     const page = await browser.newPage();
@@ -149,13 +160,13 @@ export async function POST(request) {
     });
   } catch (error) {
     console.error("PDF generation error:", error);
-    // More detailed error response
     return NextResponse.json(
       {
         error: error.message,
         stack: error.stack,
-        details:
-          "If Chrome is not installed, run: npx puppeteer browsers install chrome",
+        env: process.env.NODE_ENV,
+        platform: process.platform,
+        chromiumPath: await chromium.executablePath,
       },
       { status: 500 }
     );
