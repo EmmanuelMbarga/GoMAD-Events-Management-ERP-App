@@ -5,11 +5,12 @@ import withPWA from "next-pwa";
 const nextConfig = {
   experimental: {
     serverActions: true,
-    serverComponentsExternalPackages: ["puppeteer-core", "puppeteer"],
+    serverComponentsExternalPackages: ["puppeteer-core", "chrome-aws-lambda"],
   },
   webpack: (config, { isServer }) => {
     if (isServer) {
-      config.externals.push("puppeteer");
+      config.externals.push("puppeteer-core"); // Externalize puppeteer-core
+      config.externals.push("chrome-aws-lambda"); // Externalize chrome-aws-lambda
     }
     return config;
   },
