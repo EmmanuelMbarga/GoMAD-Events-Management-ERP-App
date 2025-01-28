@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import puppeteer from "puppeteer-core";
-import chromium from "chrome-aws-lambda";
+import puppeteer from "puppeteer";
 
 export async function POST(request) {
   console.log("PDF generation started");
@@ -15,11 +14,17 @@ export async function POST(request) {
       );
     }
 
+    // Updated browser launch configuration
     const browser = await puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath,
-      headless: chromium.headless,
+      headless: "new",
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu",
+      ],
+      executablePath: process.env.CHROME_PATH || "/usr/bin/chromium-browser", // Will use installed Chrome
+      ignoreHTTPSErrors: true,
     });
 
     console.log("Browser launched");
