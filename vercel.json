@@ -1,7 +1,8 @@
 {
   "build": {
     "env": {
-      "PUPPETEER_SKIP_DOWNLOAD": "true"
+      "PUPPETEER_SKIP_DOWNLOAD": "true",
+      "NPM_FLAGS": "--no-frozen-lockfile"
     }
   },
   "env": {
