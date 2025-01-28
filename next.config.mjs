@@ -1,15 +1,15 @@
 import withPWA from "next-pwa";
+//import path from "path";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
     serverActions: true,
-    serverComponentsExternalPackages: ["chrome-aws-lambda", "puppeteer-core"],
+    serverComponentsExternalPackages: ["puppeteer-core", "puppeteer"],
   },
   webpack: (config, { isServer }) => {
     if (isServer) {
-      config.externals.push("puppeteer-core");
-      config.externals.push("chrome-aws-lambda");
+      config.externals.push("puppeteer");
     }
     return config;
   },
@@ -49,4 +49,25 @@ const pwaConfig = withPWA({
   ],
 });
 
-export default pwaConfig({ ...nextConfig });
+export default pwaConfig({
+  ...nextConfig /*
+  async headers() {
+    return [
+      {
+        source: "/api/:path*",
+        headers: [
+          { key: "Access-Control-Allow-Credentials", value: "true" },
+          { key: "Access-Control-Allow-Origin", value: "*" },
+          {
+            key: "Access-Control-Allow-Methods",
+            value: "GET,DELETE,PATCH,POST,PUT",
+          },
+          {
+            key: "Access-Control-Allow-Headers",
+            value: "Accept, Content-Type",
+          },
+        ],
+      },
+    ];
+  },*/,
+});
