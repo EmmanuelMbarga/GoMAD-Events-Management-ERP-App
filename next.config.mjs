@@ -5,7 +5,7 @@ import withPWA from "next-pwa";
 const nextConfig = {
   experimental: {
     serverActions: true,
-    serverComponentsExternalPackages: ["puppeteer-core", "puppeteer"],
+    serverComponentsExternalPackages: ["puppeteer-core", "chrome-aws-lambda"],
   },
   webpack: (config, { isServer }) => {
     if (isServer) {
