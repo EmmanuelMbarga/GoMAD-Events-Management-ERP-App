@@ -20,7 +20,7 @@ export async function POST(request) {
       args: chromium.args,
       executablePath:
         (await chromium.executablePath) || "/usr/bin/chromium-browser",
-      headless: true,
+      headless: chromium.headless,
     });
 
     console.log("Browser launched");
