@@ -56,6 +56,7 @@ const GuestUser = () => {
       if (response.status === 201) {
         setMessage("Organiser created successfully");
         fetchOrganisers(currentPage, searchQuery, userType); // Refresh the list
+        setNewUser({ name: "", password: "", role: "staff" }); // Clear the form fields
       } else {
         setMessage("Failed to create organiser");
       }
