@@ -17,10 +17,16 @@ export async function POST(request) {
 
     // Launch browser using chrome-aws-lambda
     const browser = await puppeteer.launch({
-      args: [...chromium.args, "--no-sandbox", "--disable-setuid-sandbox"],
-      executablePath: await chromium.executablePath,
-      headless: chromium.headless,
-      ignoreHTTPSErrors: true,
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--single-process",
+        "--no-zygote",
+      ],
+      executablePath:
+        (await chromium.executablePath) || "/usr/bin/chromium-browser",
+      headless: true,
     });
 
     console.log("Browser launched");
