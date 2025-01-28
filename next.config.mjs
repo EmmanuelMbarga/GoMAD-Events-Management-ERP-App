@@ -50,7 +50,7 @@ const pwaConfig = withPWA({
 });
 
 export default pwaConfig({
-  ...nextConfig,
+  ...nextConfig /*
   async headers() {
     return [
       {
@@ -69,5 +69,5 @@ export default pwaConfig({
         ],
       },
     ];
-  },
+  },*/,
 });

@@ -60,7 +60,7 @@ export default function PaymentPage() {
     setIsLoading(true);
     try {
       const response = await fetch(
-        "https://gomad-backend.onrender.com/api/register-and-pay",
+        "http://localhost:5003/api/register-and-pay",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -68,7 +68,7 @@ export default function PaymentPage() {
             name: form.name,
             tel: form.phone,
             type: form.method,
-            amount: 10,
+            amount: 5,
           }),
         }
       );
