@@ -1,22 +1,16 @@
 import withPWA from "next-pwa";
-//import path from "path";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
     serverActions: true,
-    serverComponentsExternalPackages: ["puppeteer-core", "chrome-aws-lambda"],
+    serverComponentsExternalPackages: ["chrome-aws-lambda", "puppeteer-core"],
   },
   webpack: (config, { isServer }) => {
     if (isServer) {
-      config.externals.push("puppeteer-core"); // Externalize puppeteer-core
-      config.externals.push("chrome-aws-lambda"); // Externalize chrome-aws-lambda
+      config.externals.push("puppeteer-core");
+      config.externals.push("chrome-aws-lambda");
     }
-    // Add file loader for binary files
-    config.module.rules.push({
-      test: /\.node$/,
-      use: "node-loader",
-    });
     return config;
   },
 };
@@ -55,25 +49,4 @@ const pwaConfig = withPWA({
   ],
 });
 
-export default pwaConfig({
-  ...nextConfig /*
-  async headers() {
-    return [
-      {
-        source: "/api/:path*",
-        headers: [
-          { key: "Access-Control-Allow-Credentials", value: "true" },
-          { key: "Access-Control-Allow-Origin", value: "*" },
-          {
-            key: "Access-Control-Allow-Methods",
-            value: "GET,DELETE,PATCH,POST,PUT",
-          },
-          {
-            key: "Access-Control-Allow-Headers",
-            value: "Accept, Content-Type",
-          },
-        ],
-      },
-    ];
-  },*/,
-});
+export default pwaConfig({ ...nextConfig });
