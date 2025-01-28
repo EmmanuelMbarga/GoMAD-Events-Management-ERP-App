@@ -23,7 +23,7 @@ export async function POST(request) {
         "--disable-dev-shm-usage",
         "--disable-gpu",
       ],
-      executablePath: process.env.CHROME_PATH || undefined, // Will use installed Chrome
+      executablePath: process.env.CHROME_PATH || "/usr/bin/chromium-browser", // Will use installed Chrome
       ignoreHTTPSErrors: true,
     });
 
