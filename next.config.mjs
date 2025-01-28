@@ -9,8 +9,19 @@ const nextConfig = {
   },
   webpack: (config, { isServer }) => {
     if (isServer) {
-      config.externals.push("puppeteer");
+      config.externals.push("puppeteer", "chrome-aws-lambda");
     }
+    config.module.rules.push({
+      test: /\.js$/,
+      exclude:
+        /node_modules\/chrome-aws-lambda\/build\/puppeteer\/lib\/.*\.js\.map$/,
+      use: {
+        loader: "babel-loader",
+        options: {
+          presets: ["next/babel"],
+        },
+      },
+    });
     return config;
   },
 };
