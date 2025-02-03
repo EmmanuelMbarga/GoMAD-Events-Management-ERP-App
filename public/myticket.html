@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Event Ticket</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f3f4f6;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+      .ticket {
+        background-color: #ffffff;
+        border: 2px solid #60a5fa;
+        border-radius: 10px;
+        max-width: 800px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid #60a5fa;
+        padding-bottom: 10px;
+      }
+      .header h1 {
+        font-size: 2rem;
+        color: #1e40af;
+        font-weight: bold;
+      }
+      .header .price {
+        background-color: #60a5fa;
+        color: #ffffff;
+        padding: 5px 15px;
+        border-radius: 5px;
+        font-weight: bold;
+        font-size: 1.25rem;
+      }
+      .content {
+        margin: 20px 0;
+      }
+      .theme {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      .theme .label {
+        background-color: #60a5fa;
+        color: #ffffff;
+        padding: 5px 10px;
+        font-weight: bold;
+        border-radius: 5px;
+      }
+      .theme .text {
+        font-size: 1.25rem;
+        font-weight: bold;
+      }
+      .details {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+      .details div {
+        text-align: center;
+      }
+      .details h2 {
+        color: #60a5fa;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+      .footer {
+        text-align: center;
+        border-top: 2px solid #60a5fa;
+        padding-top: 10px;
+        margin-top: 20px;
+      }
+      .footer p {
+        font-weight: bold;
+      }
+      .qr-code {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ticket">
+      <div class="header">
+        <h1>GoMAD 10</h1>
+        <div class="price">15,000 FCFA</div>
+      </div>
+      <div class="content">
+        <div class="theme">
+          <div class="label">Theme:</div>
+          <div class="text">
+            From Vision to Impact; Entrepreneurs as Nation Builders
+          </div>
+        </div>
+        <p>
+          Dear <span style="text-decoration: underline">${data.name}</span>,
+        </p>
+        <p>Your ticket for this event is secured.</p>
+        <div class="details">
+          <div>
+            <h2>Date:</h2>
+            <p>15 February, 2025</p>
+          </div>
+          <div>
+            <h2>Time:</h2>
+            <p>8:00am to 6:00pm</p>
+          </div>
+          <div>
+            <h2>Venue:</h2>
+            <p>Collège Saint-Michel, Carrefour Terminus, Douala</p>
+          </div>
+        </div>
+        <div class="qr-code">
+          <img src="${data.qrcode}" alt="QR Code" />
+        </div>
+        <p style="text-align: center">Official use only</p>
+      </div>
+      <div class="footer">
+        <p>Contacts: +237 679 112 339, +237 656 056 87</p>
+        <p>
+          Visit
+          <a href="http://www.gomadnetwork.com" target="_blank"
+            >www.gomadnetwork.com</a
+          >
+          for more information
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
