@@ -4,8 +4,13 @@ import { useState } from "react";
 import Image from "next/image";
 import { Dialog } from "@headlessui/react";
 import { motion } from "framer-motion";
-import { Loader2, CheckCircle, AlertCircle } from "lucide-react";
+import { Loader2, CheckCircle, AlertCircle, Ticket } from "lucide-react";
 import { useRouter } from "next/navigation";
+
+
+
+
+
 
 export default function PaymentPage() {
   const [form, setForm] = useState({ name: "", phone: "", method: "" });
@@ -74,7 +79,7 @@ export default function PaymentPage() {
       );
 
       const data = await response.json();
-
+      console.log(data)
       if (response.ok) {
         setTicketData({
           name: form.name,
@@ -318,7 +323,6 @@ export default function PaymentPage() {
           </>
         )}
       </motion.div>
-
       {/* Footer */}
       <footer className="w-full max-w-md mt-auto">
         <button
