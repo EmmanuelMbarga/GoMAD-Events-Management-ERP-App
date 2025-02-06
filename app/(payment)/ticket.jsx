@@ -80,7 +80,7 @@ export default function TicketView(props) {
                 />
               </div>
               <div style={{borderColor:"#00AAE8"}}  className=" w-60 ml-3 border-l-4 px-2">
-              {/* <!-- QR Code Placeholder by Figma --> */}
+              {/* <!--------------- QR Code Placeholder by Figma ---------------> */}
                 <div>
                   <div className="flex justify-center">
                     <div className="w-14 h-14">{props.data.qrCode}</div>
@@ -89,7 +89,7 @@ export default function TicketView(props) {
                 </div>
                 <div style={{borderColor:"#00AAE8"}} className="border-2  my-2"></div>
 
-              {/* <!-- QR Code Placeholder by google map --> */}
+              {/* <!--------------- QR Code Placeholder by google map ---------------> */}
                 <div>
                   <div className="flex justify-center">
                     <div className="w-14 h-14 bg-black"></div>
