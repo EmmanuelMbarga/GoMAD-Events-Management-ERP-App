@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import puppeteer from "puppeteer-core";
 import chromium from "@sparticuz/chromium";
-import TicketView from "@/app/(payment)/ticket.js";
+import TicketView from "../../(payment)/ticket";
 
 export async function POST(request) {
   console.log("PDF generation started");
